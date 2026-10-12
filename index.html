@@ -563,13 +563,8 @@ let rzt;addEventListener("resize",()=>{if(!RS.open||!RS.doc)return;clearTimeout(
 function read(b,src){
  if(!b.f){toast("PDF buku ini belum diunggah ke folder buku");if(src){src.classList.remove("shake");void src.offsetWidth;src.classList.add("shake")}return}
  cnt[b.id]=n(b)+1;save();paint(b);info();
- const p=prog[b.id]||0,start=b.pg&&p>=b.pg?1:Math.max(1,p);
- const loading=startLoad(b);loading.catch(()=>{});
- const ov=el("div","ov"),bk=el("div","ob");bk.append(el("div","pg"),el("div","pl"),cover(b));ov.append(bk);document.body.append(ov);
- requestAnimationFrame(()=>ov.classList.add("on"));
- setTimeout(()=>bk.classList.add("open"),calm?0:650);
- setTimeout(()=>openReader(b,loading,start),calm?150:1500);
- setTimeout(()=>{ov.classList.remove("on");setTimeout(()=>ov.remove(),500)},calm?400:2100)}
+ /* Buka PDF aslinya langsung di penampil bawaan browser/HP, bukan di dalam web */
+ const w=window.open(url(b),"_blank");if(!w)location.href=url(b)}
 
 function toggleFav(b){fav.has(b.id)?fav.delete(b.id):fav.add(b.id);save();
  if(cat==="__fav")renderShelves();else document.querySelectorAll('.fav[data-id="'+CSS.escape(b.id)+'"]').forEach(x=>{x.classList.toggle("on",fav.has(b.id));x.classList.remove("pop");void x.offsetWidth;x.classList.add("pop")});
@@ -625,7 +620,7 @@ function openDet(b){const d=$("#det");d.replaceChildren();
  const rdb=el("button","btn");
  const upd=()=>{const p=prog[b.id]||0,pc=pct(b);fl.style.width=pc+"%";
   pa.textContent=p?"Sampai halaman "+p+(total?" dari "+total:""):"Belum mulai dibaca";pb.textContent=total&&p?pc+"%":"";
-  rdb.textContent=p>1&&(!total||p<total)?"Lanjut baca, hal. "+p:"Baca sekarang";paint(b);info()};
+  rdb.textContent="Baca sekarang";paint(b);info()};
  const sv=el("button","btn g","Simpan");
  sv.onclick=()=>{let p=parseInt(inp.value)||0;p=Math.max(0,total?Math.min(p,total):p);if(p)prog[b.id]=p;else delete prog[b.id];inp.value=p||"";if(rg)rg.value=p;save();upd();toast("Progres tersimpan")};
  if(rg)rg.onchange=()=>sv.click();
