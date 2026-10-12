@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📖%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
 --paper:#FFFEFB;--bg:#FAF6EE;--cream:#F3EBDC;--sand:#E6D8BF;--taupe:#C9B896;
@@ -18,7 +18,7 @@
 --grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0 0 0 -.3'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E")}
 *{box-sizing:border-box;margin:0}
 html{scroll-behavior:smooth}
-body{min-height:100vh;color:var(--ink);font:500 15px/1.55 Manrope,system-ui,sans-serif;overflow-x:hidden;background:var(--bg);padding-bottom:env(safe-area-inset-bottom,0)}
+body{min-height:100vh;color:var(--ink);font:500 15px/1.55 Manrope,"Noto Naskh Arabic",system-ui,sans-serif;overflow-x:hidden;background:var(--bg);padding-bottom:env(safe-area-inset-bottom,0)}
 body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(60% 40% at 50% -8%,#fff,transparent 70%),radial-gradient(50% 40% at 100% 8%,rgba(230,210,170,.38),transparent 70%),radial-gradient(50% 45% at 0% 55%,rgba(225,208,176,.42),transparent 70%),radial-gradient(60% 40% at 70% 112%,rgba(214,192,150,.35),transparent 70%),linear-gradient(180deg,#FDFBF6,#F4ECDD)}
 body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;background:var(--grain)}
 button,input{font:inherit;color:inherit}
@@ -30,7 +30,7 @@ button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:trans
 .nav{position:fixed;z-index:30;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(1160px,calc(100% - 24px));display:flex;align-items:center;gap:12px;padding:7px 7px 7px 10px;border-radius:999px;background:rgba(255,254,251,.82);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 0 0 1px var(--line),0 18px 36px -22px rgba(90,65,25,.45)}
 .logo{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(180deg,#F3E6C8,#D9BF86)}
 .logo svg{width:20px;height:20px;stroke:#3a2c14}
-.nav h1{font:400 27px/1 "Instrument Serif",Georgia,serif;white-space:nowrap;letter-spacing:-.01em}
+.nav h1{font:400 27px/1 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;white-space:nowrap;letter-spacing:-.01em}
 .search{flex:1;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:999px;background:rgba(243,235,220,.7);border:1px solid transparent;min-width:0;transition:background .2s,border-color .2s}
 .search:focus-within{border-color:var(--gold);background:#fff}
 .search input{flex:1;border:0;background:none;outline:0;min-width:0}
@@ -48,7 +48,7 @@ button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:trans
 .hi{min-width:0;position:relative;z-index:2}
 .tag{display:inline-flex;gap:9px;align-items:center;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,254,251,.8);box-shadow:inset 0 0 0 1px var(--line);color:var(--mute)}
 .tag i{width:7px;height:7px;border-radius:50%;background:var(--gold)}
-.hi h2{font:400 clamp(44px,6.4vw,92px)/.96 "Instrument Serif",Georgia,serif;letter-spacing:-.025em;margin:20px 0 14px;overflow-wrap:anywhere;min-height:1em}
+.hi h2{font:400 clamp(44px,6.4vw,92px)/.96 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;letter-spacing:-.025em;margin:20px 0 14px;overflow-wrap:anywhere;min-height:1em}
 .w{display:inline-block;margin-right:.22em;animation:wr .7s var(--e) both;animation-delay:calc(var(--i)*60ms)}
 @keyframes wr{from{opacity:0;transform:translateY(40%)}}
 .ha{font-weight:700}
@@ -78,10 +78,10 @@ button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:trans
 .fr::before{content:"";position:absolute;inset:1.6cqw;border:1px solid var(--fl);opacity:.45}
 .orn{width:8cqw;height:8cqw;flex:none;color:var(--fl)}
 .mid{width:100%;min-width:0}
-.cover strong{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;padding-bottom:.08em;font:400 11.5cqw/1.05 "Instrument Serif",Georgia,serif;text-wrap:balance;overflow-wrap:anywhere;color:var(--tx);text-shadow:var(--tsh)}
+.cover strong{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;padding-bottom:.08em;font:400 11.5cqw/1.05 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;text-wrap:balance;overflow-wrap:anywhere;color:var(--tx);text-shadow:var(--tsh)}
 .rule{display:block;position:relative;width:38%;height:1px;margin:5cqw auto 0;background:linear-gradient(90deg,transparent,var(--fl),transparent)}
 .rule::after{content:"";position:absolute;left:50%;top:-2px;width:5px;height:5px;background:var(--fl);transform:translateX(-50%) rotate(45deg)}
-.au{font:600 3.8cqw/1.3 Manrope,sans-serif;font-style:normal;letter-spacing:.14em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx);opacity:.8}
+.au{font:600 3.8cqw/1.3 Manrope,"Noto Naskh Arabic",sans-serif;font-style:normal;letter-spacing:.14em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx);opacity:.8}
 .sh{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(112deg,transparent calc(var(--sx) - 20%),rgba(255,255,255,.22) var(--sx),transparent calc(var(--sx) + 20%))}
 .bd img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .5s}
 .real .bd img{opacity:1}
@@ -95,7 +95,7 @@ button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:trans
 .chip b{font-size:11px;opacity:.7}
 .chip.on{background:var(--btn);color:#F6EAD0}
 .sh-head{display:flex;align-items:baseline;justify-content:space-between;margin:54px 0 26px;padding-bottom:12px;border-bottom:1px solid var(--line);gap:10px;scroll-margin-top:150px}
-.sh-head h2{font:400 clamp(32px,5vw,52px)/1 "Instrument Serif",Georgia,serif;letter-spacing:-.02em}
+.sh-head h2{font:400 clamp(32px,5vw,52px)/1 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;letter-spacing:-.02em}
 .sh-head span{font-size:13px;color:var(--mute);font-weight:600;white-space:nowrap}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:40px 28px}
 .card{position:relative;min-width:0}
@@ -141,7 +141,7 @@ dialog[open]{animation:dg .4s var(--e)}
 @keyframes dg{from{opacity:0;transform:translateY(24px)}}
 dialog::backdrop{background:rgba(51,41,31,.38);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 #dlg{padding:28px}
-dialog h2{font:400 34px "Instrument Serif",Georgia,serif}
+dialog h2{font:400 34px "Instrument Serif","Noto Naskh Arabic",Georgia,serif}
 #dlg>p{color:var(--mute);margin:6px 0 12px;font-size:13.5px}
 .f{display:block;font-size:12.5px;font-weight:700;margin-top:10px}
 .f input{display:block;width:100%;margin-top:5px;height:44px;border:0;border-radius:14px;padding:0 14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0}
@@ -157,7 +157,7 @@ pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14
 .dr{padding:38px 38px 32px;min-width:0}
 .x{position:absolute;right:14px;top:12px;width:38px;height:38px;border-radius:50%;font-size:22px;line-height:1;color:var(--mute);background:rgba(255,254,251,.9);box-shadow:inset 0 0 0 1px var(--line);z-index:2}
 .dcat{display:inline-block;font-size:12.5px;font-weight:700;color:var(--gold-d);padding:4px 12px;border-radius:999px;background:rgba(227,205,155,.35)}
-.dr h2{font:400 clamp(32px,5vw,46px)/1 "Instrument Serif",Georgia,serif;letter-spacing:-.02em;margin:12px 38px 4px 0;overflow-wrap:anywhere}
+.dr h2{font:400 clamp(32px,5vw,46px)/1 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;letter-spacing:-.02em;margin:12px 38px 4px 0;overflow-wrap:anywhere}
 .dau{color:var(--mute);font-weight:600}
 .stars{display:flex;align-items:center;gap:0;margin-top:14px;flex-wrap:wrap}
 .st{font-size:28px;line-height:1;padding:2px;color:transparent;background:linear-gradient(90deg,#C9A24E var(--f,0%),rgba(110,86,50,.2) var(--f,0%));-webkit-background-clip:text;background-clip:text;transition:transform .2s var(--e)}
@@ -165,7 +165,7 @@ pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14
 .rt{font-size:13px;font-weight:600;color:var(--mute);margin-left:10px}
 .ds{margin-top:16px;color:#4b4030;line-height:1.7;max-width:60ch}
 .sec{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
-.sec h4{font:400 22px/1 "Instrument Serif",Georgia,serif;margin-bottom:12px}
+.sec h4{font:400 22px/1 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;margin-bottom:12px}
 .idl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 22px;font-size:13.5px}
 .idl dt{color:var(--mute)}.idl dd{font-weight:600;margin:0;overflow-wrap:anywhere}
 .tr{height:8px;border-radius:8px;background:rgba(110,86,50,.14);overflow:hidden}
@@ -204,7 +204,7 @@ pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14
 .ib svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ib:disabled{opacity:.35;cursor:default}
 .rtt{flex:1;min-width:0}
-.rtt b{display:block;font:400 21px/1.1 "Instrument Serif",Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtt b{display:block;font:400 21px/1.1 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rtt small{display:block;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rtrack{height:3px;background:rgba(110,86,50,.15)}
 .rtrack i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--champ));transition:width .3s}
@@ -266,7 +266,7 @@ pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14
 .fe-ic{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;flex:none;background:linear-gradient(180deg,#F3E6C8,#D9BF86)}
 .fe-ic svg{width:30px;height:25px}
 .fe-tx{flex:1;min-width:0}
-.fe-tx b{display:block;font:400 26px/1 "Instrument Serif",Georgia,serif}
+.fe-tx b{display:block;font:400 26px/1 "Instrument Serif","Noto Naskh Arabic",Georgia,serif}
 .fe-tx small{color:var(--mute);font-size:12.5px;font-weight:600}
 .chev{flex:none;color:var(--mute);transition:transform .25s var(--e)}
 .fold-entry:hover .chev{transform:translateX(4px)}
@@ -289,7 +289,7 @@ pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14
 .fcard:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px var(--gold),0 22px 30px -22px rgba(90,65,25,.55)}
 .fcard:active{transform:scale(.95);transition-duration:.08s}
 .fcard .fi{width:64px;height:52px}
-.fcard b{display:block;font:400 25px/1.05 "Instrument Serif",Georgia,serif;overflow-wrap:anywhere}
+.fcard b{display:block;font:400 25px/1.05 "Instrument Serif","Noto Naskh Arabic",Georgia,serif;overflow-wrap:anywhere}
 .fcard small{color:var(--mute);font-size:12.5px;font-weight:600}
 .frow{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px 12px 12px;border-radius:22px;text-align:left;background:rgba(255,254,251,.88);box-shadow:inset 0 0 0 1px var(--line);transition:transform .25s var(--e),box-shadow .25s}
 .frow:hover{transform:translateX(3px);box-shadow:inset 0 0 0 1px var(--gold)}
@@ -327,6 +327,11 @@ button,a,.cf,.card{touch-action:manipulation}
 #akW input,#akW select{display:block;width:100%;height:46px;margin-top:14px;border:0;border-radius:14px;padding:0 14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0}
 #akW input:focus,#akW select:focus{box-shadow:inset 0 0 0 1.5px var(--gold),0 0 0 4px rgba(169,133,68,.16)}
 .btn.dng{background:linear-gradient(180deg,#8A3B2B,#5E2418)}
+#how{display:none!important}
+h2,h3,h4,.tx small,.frow b,.frow span{unicode-bidi:plaintext}
+[dir=auto]:lang(ar),:lang(ar){font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif!important;letter-spacing:0!important;word-spacing:.05em;line-height:1.5!important;font-weight:600}
+.hi h2:lang(ar){font-size:clamp(34px,5.2vw,68px)!important;line-height:1.35!important}
+input:lang(ar),textarea:lang(ar){font-weight:500}
 </style>
 </head>
 <body>
@@ -746,6 +751,14 @@ addEventListener("keydown",e=>{if(e.key==="Escape"&&FV.open&&!RS.open)fBack()});
 layout();renderChips();renderShelves();
 requestAnimationFrame(()=>requestAnimationFrame(()=>stage.classList.add("ready")));
 })();
+/* Teks Arab: arah kanan ke kiri + font Naskh; teks Indonesia tetap kiri ke kanan */
+(function(){var AR=/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
+function fx(e){if(e&&e.parentElement&&/^H[1-6]$/.test(e.parentElement.tagName))return;if(!e||e.nodeType!==1||(e.children.length&&!/^H[1-6]$/.test(e.tagName))||/^(SCRIPT|STYLE|OPTION)$/.test(e.tagName))return;
+ if(AR.test(e.textContent)){if(e.dir!=="auto")e.dir="auto";if(e.lang!=="ar")e.lang="ar"}else if(e.dir==="auto"&&e.lang==="ar"){e.removeAttribute("dir");e.removeAttribute("lang")}}
+function all(r){fx(r);if(r.querySelectorAll)r.querySelectorAll("*").forEach(fx)}
+new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==="characterData")fx(m.target.parentElement);else{fx(m.target);m.addedNodes.forEach(function(n){if(n.nodeType===1)all(n)})}})}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
+function inp(){document.querySelectorAll("input[type=text],input:not([type]),input[type=search],textarea").forEach(function(i){if(!i.dataset.bd){i.dataset.bd=1;i.dir="auto"}})}
+inp();new MutationObserver(inp).observe(document.documentElement,{childList:true,subtree:true});all(document.body)})();
 </script>
 </body>
 </html>
