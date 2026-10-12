@@ -43,7 +43,7 @@ dialog h2{font:400 32px "Instrument Serif","Noto Naskh Arabic",Georgia,serif}
 .how{margin-top:26px;background:rgba(255,254,251,.9);border-radius:22px;padding:16px 18px;box-shadow:inset 0 0 0 1px var(--line)}.how summary{font-weight:700;cursor:pointer}.how ol{padding-left:20px;margin-top:10px;display:grid;gap:6px}.how p{margin-top:10px;color:var(--red);font-weight:600}
 #toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#2B2118;color:#F6EAD0;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:99;max-width:90vw;text-align:center}#toast.on{opacity:1;transform:translate(-50%,0)}
 @media(max-width:520px){.g2{grid-template-columns:1fr}}
-[dir=auto]:lang(ar),:lang(ar){font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif!important;letter-spacing:0!important;word-spacing:.05em;line-height:1.5!important;font-weight:600}
+[dir=rtl]:lang(ar),:lang(ar){direction:rtl;unicode-bidi:isolate;font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif!important;letter-spacing:0!important;word-spacing:.05em;line-height:1.5!important;font-weight:600}
 .hi h2:lang(ar){font-size:clamp(34px,5.2vw,68px)!important;line-height:1.35!important}
 input:lang(ar),textarea:lang(ar){font-weight:500}
 </style></head><body>
@@ -172,10 +172,13 @@ F("nf").onclick=addFolder;F("nb").onclick=function(){openBook(-1)};
 var sd;F("q").oninput=function(e){clearTimeout(sd);sd=setTimeout(function(){q=e.target.value;render()},140)};
 render();
 })();
-/* Teks Arab: arah kanan ke kiri + font Naskh; teks Indonesia tetap kiri ke kanan */
-(function(){var AR=/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/;
-function fx(e){if(e&&e.parentElement&&/^H[1-6]$/.test(e.parentElement.tagName))return;if(!e||e.nodeType!==1||(e.children.length&&!/^H[1-6]$/.test(e.tagName))||/^(SCRIPT|STYLE|OPTION)$/.test(e.tagName))return;
- if(AR.test(e.textContent)){if(e.dir!=="auto")e.dir="auto";if(e.lang!=="ar")e.lang="ar"}else if(e.dir==="auto"&&e.lang==="ar"){e.removeAttribute("dir");e.removeAttribute("lang")}}
+/* Teks Arab: arah kanan ke kiri (dipaksa) + font Naskh; teks Indonesia tetap kiri ke kanan */
+(function(){var AG=/[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF]/g,LG=/[A-Za-z]/g;
+function fx(e){if(!e||e.nodeType!==1||/^(SCRIPT|STYLE|OPTION|TEXTAREA|INPUT)$/.test(e.tagName))return;
+ var h=e.closest("h1,h2,h3,h4");if(h&&h!==e)return;if(e.children.length&&!h)return;
+ var t=e.textContent,a=(t.match(AG)||[]).length,l=(t.match(LG)||[]).length;
+ if(a&&a>=l){if(e.dir!=="rtl")e.dir="rtl";if(e.lang!=="ar")e.lang="ar";e.dataset.ar=1}
+ else if(e.dataset.ar){e.removeAttribute("dir");e.removeAttribute("lang");delete e.dataset.ar}}
 function all(r){fx(r);if(r.querySelectorAll)r.querySelectorAll("*").forEach(fx)}
 new MutationObserver(function(ms){ms.forEach(function(m){if(m.type==="characterData")fx(m.target.parentElement);else{fx(m.target);m.addedNodes.forEach(function(n){if(n.nodeType===1)all(n)})}})}).observe(document.documentElement,{childList:true,subtree:true,characterData:true});
 function inp(){document.querySelectorAll("input[type=text],input:not([type]),input[type=search],textarea").forEach(function(i){if(!i.dataset.bd){i.dataset.bd=1;i.dir="auto"}})}
