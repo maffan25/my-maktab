@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow"><title>Kelola Perpustakaan | Affan's Library</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Manrope:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAF6EE;--cream:#F3EBDC;--ink:#33291F;--mute:#75664F;--gold:#A98544;--gold-d:#7C6026;--line:rgba(110,86,50,.17);--red:#9B3A2A}
+*{box-sizing:border-box;margin:0}
+body{font:500 15px/1.55 Manrope,system-ui,sans-serif;color:var(--ink);background:linear-gradient(180deg,#FDFBF6,#F4ECDD) fixed;padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+button,input,select,textarea{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none}
+.wrap{max-width:920px;margin:auto;padding:0 18px}
+header{padding:calc(30px + env(safe-area-inset-top,0px)) 0 20px}
+.tag{display:inline-block;font-size:12.5px;font-weight:700;padding:5px 14px;border-radius:999px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);color:var(--gold-d)}
+h1{font:400 clamp(36px,7vw,54px)/1 "Instrument Serif",Georgia,serif;margin:14px 0 8px}
+header p{color:var(--mute);max-width:58ch}
+.status{position:sticky;top:0;z-index:20;background:rgba(250,246,238,.93);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:10px 0}
+.status .wrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.dot{width:10px;height:10px;border-radius:50%;background:#B9AD94;flex:none}.status.dirty .dot{background:var(--gold);box-shadow:0 0 0 4px rgba(169,133,68,.28)}
+#stx{flex:1;min-width:160px;font-size:14px}
+.btn{height:42px;padding:0 20px;border-radius:999px;font-weight:700;font-size:14px;background:linear-gradient(180deg,#43362A,#2B2118);color:#F6EAD0;display:inline-flex;align-items:center;gap:8px;white-space:nowrap}
+.btn.g{background:rgba(255,254,251,.92);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.sm{height:34px;padding:0 14px;font-size:13px}.btn.red{color:var(--red)}.btn.dng{background:linear-gradient(180deg,#8A3B2B,#5E2418);color:#fff}
+.btn:disabled{opacity:.45;cursor:default}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 16px}.bar input{flex:1;min-width:170px}
+input,select,textarea{width:100%;border:0;border-radius:14px;padding:0 14px;height:44px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0}
+textarea{padding:10px 14px;height:78px;resize:vertical}
+input:focus,select:focus,textarea:focus{box-shadow:inset 0 0 0 1.5px var(--gold),0 0 0 4px rgba(169,133,68,.16)}
+input[type=file]{height:auto;padding:9px 14px}input[type=checkbox]{width:auto;height:auto;margin-right:8px}
+.fold{background:rgba(255,254,251,.9);border-radius:24px;box-shadow:inset 0 0 0 1px var(--line);padding:16px;margin-bottom:16px}
+.fh{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.fh input{flex:1;min-width:140px;font:400 25px "Instrument Serif",Georgia,serif;height:46px}.fh small{color:var(--mute);font-weight:600}
+.row{display:flex;gap:12px;align-items:center;padding:10px;border-radius:18px;background:var(--bg);margin-top:8px;flex-wrap:wrap}
+.th{width:44px;height:58px;border-radius:6px;background:var(--cream);flex:none;overflow:hidden;box-shadow:0 0 0 1px var(--line)}.th img{width:100%;height:100%;object-fit:cover;display:block}
+.ri{flex:1;min-width:150px}.ri b{display:block;overflow-wrap:anywhere}.ri small{color:var(--mute);font-weight:600}.ra{display:flex;gap:6px}
+.none{color:var(--mute);padding:8px 4px}
+dialog{border:0;border-radius:28px;padding:24px;width:min(560px,94vw);max-height:92vh;background:linear-gradient(180deg,#FFFEFB,#F8F1E3);color:var(--ink);box-shadow:0 40px 90px -24px rgba(50,35,12,.5),0 0 0 1px var(--line)}
+dialog::backdrop{background:rgba(51,41,31,.4)}
+dialog h2{font:400 32px "Instrument Serif",Georgia,serif}
+.fl{display:block;font-size:12.5px;font-weight:700;margin-top:12px}.fl>*{margin-top:5px;font-weight:500}.fl small{color:var(--mute);display:block;margin:0}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.act{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+.cv{display:flex;gap:12px;align-items:center;margin-top:8px}.cv .th{width:56px;height:74px}.cv small{color:var(--mute)}
+.err{color:var(--red);font-weight:700;font-size:13px;margin-top:10px;min-height:1em}
+#akW input,#akW select{margin-top:12px}.akp{color:var(--mute);margin-top:6px}
+.how{margin-top:26px;background:rgba(255,254,251,.9);border-radius:22px;padding:16px 18px;box-shadow:inset 0 0 0 1px var(--line)}.how summary{font-weight:700;cursor:pointer}.how ol{padding-left:20px;margin-top:10px;display:grid;gap:6px}.how p{margin-top:10px;color:var(--red);font-weight:600}
+#toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#2B2118;color:#F6EAD0;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.3s;z-index:99;max-width:90vw;text-align:center}#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:520px){.g2{grid-template-columns:1fr}}
+</style></head><body>
+<header><div class="wrap"><span class="tag">Khusus pengelola</span><h1>Kelola Perpustakaan</h1><p>Tambah buku, ganti sampul, ubah nama folder, atau hapus buku. Tidak perlu coding. Selesai mengedit, tekan tombol unduh lalu unggah hasilnya ke GitHub.</p></div></header>
+<div class="status" id="st"><div class="wrap"><i class="dot"></i><span id="stx"></span><button class="btn" id="dl">Unduh buku.js</button></div></div>
+<main class="wrap">
+<div class="bar"><input id="q" type="search" placeholder="Cari judul, penulis, atau folder" aria-label="Cari"><button class="btn g" id="nf">+ Folder baru</button><button class="btn" id="nb">+ Tambah buku</button></div>
+<div id="root"></div>
+<details class="how" open><summary>Cara menerbitkan perubahan</summary><ol>
+<li>Tekan <b>+ Tambah buku</b>, pilih file PDF. Sampul dan jumlah halaman terisi otomatis dari halaman pertama PDF. Boleh ganti dengan foto sampul sendiri.</li>
+<li>Ganti nama folder dengan mengetik langsung pada namanya. Pindahkan buku lewat <b>Ubah</b>, lalu pilih folder lain.</li>
+<li>Selesai? Tekan <b>Unduh</b> di bagian atas. Bila ada PDF baru, hasilnya berupa file zip. Ekstrak sehingga muncul <b>buku.js</b> dan folder <b>buku</b>.</li>
+<li>Buka repositori di GitHub, tekan <b>Add file</b>, lalu <b>Upload files</b>. Seret <b>buku.js</b> dan folder <b>buku</b> sekaligus, lalu <b>Commit changes</b>.</li>
+<li>Tunggu 1 sampai 2 menit, lalu muat ulang web. Satu file lewat browser maksimal 25 MB, yang lebih besar diunggah lewat GitHub Desktop.</li>
+<li>Jangan ubah judul atau penulis buku yang sudah banyak dibaca, karena favorit dan progres pembaca di perangkat mereka akan ikut terlepas.</li></ol>
+<p id="gone" hidden></p></details>
+</main>
+<dialog id="dlg"><form id="form" novalidate><h2 id="dT"></h2>
+<label class="fl">Judul<input id="aT"></label>
+<div class="g2"><label class="fl">Penulis<input id="aA"></label><label class="fl">Folder<select id="aC"></select></label></div>
+<label class="fl">File PDF <small id="pf"></small><input id="aF" type="file" accept="application/pdf,.pdf"></label>
+<label class="fl">Foto sampul <small>Kosongkan untuk memakai halaman pertama PDF.</small><input id="aI" type="file" accept="image/*"></label>
+<div class="cv"><div class="th"><img id="cvi" alt=""></div><small>Pratinjau sampul</small></div>
+<label class="fl">Deskripsi singkat<textarea id="aD"></textarea></label>
+<div class="g2"><label class="fl">Penerbit<input id="aP"></label><label class="fl">Tahun terbit<input id="aY" inputmode="numeric"></label>
+<label class="fl">Jumlah halaman<input id="aG" inputmode="numeric"></label><label class="fl">Rating awal 1 sampai 5<input id="aR" inputmode="decimal"></label></div>
+<label class="fl"><span><input type="checkbox" id="aS">Tampilkan sebagai pilihan utama di beranda</span></label>
+<div class="err" id="err" role="alert"></div>
+<div class="act"><button class="btn g" type="button" id="cx">Batal</button><button class="btn" type="submit">Simpan</button></div></form></dialog>
+<dialog id="ask"><h2 id="akT"></h2><p class="akp" id="akP"></p><div id="akW"></div><div class="act"><button class="btn g" id="akNo">Batal</button><button class="btn" id="akOk">Simpan</button></div></dialog>
+<div id="toast"></div>
+<script src="buku.js"></script>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},F=function(i){return document.getElementById(i)};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+var PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+var SRC=window.PERPUS||{books:[],folders:[]},D=JSON.parse(JSON.stringify(SRC)),SIGN=JSON.stringify(SRC),P={},gone=[],q="",cur=null,tT;
+D.books=D.books||[];D.folders=D.folders||[];
+var fold=function(){return Array.from(new Set(D.books.map(function(b){return b.c}).concat(D.folders)))};
+var jpgName=function(f){return f.replace(/\.pdf$/i,".jpg")};
+var enc=function(s){return s.split("/").map(encodeURIComponent).join("/")};
+var dirty=function(){return JSON.stringify(D)!==SIGN||Object.keys(P).length>0};
+function toast(m){var t=F("toast");t.textContent=m;t.classList.add("on");clearTimeout(tT);tT=setTimeout(function(){t.classList.remove("on")},2800)}
+window.onbeforeunload=function(){return dirty()&&!window._saved?"Perubahan belum diunduh":undefined};
+function touch(m){window._saved=false;render();if(m)toast(m)}
+function slug(s){return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60)||"buku"}
+function uniq(t){var b=slug(t),n=b+".pdf",i=2,used=D.books.map(function(x){return x.f});while(used.indexOf(n)>-1||P[n])n=b+"-"+(i++)+".pdf";return n}
+function ask(o){return new Promise(function(ok){F("akT").textContent=o.title;F("akP").textContent=o.text||"";var w=F("akW");w.replaceChildren();var c;
+ if(o.options){c=el("select");o.options.forEach(function(p){var e=el("option","",p[1]);e.value=p[0];c.append(e)})}
+ else if(o.input!=null){c=el("input");c.value=o.input;c.placeholder=o.ph||"";c.onkeydown=function(e){if(e.key==="Enter"){e.preventDefault();F("akOk").click()}}}
+ if(c)w.append(c);F("akOk").textContent=o.ok||"Simpan";F("akOk").className="btn"+(o.danger?" dng":"");
+ var d=F("ask"),done=function(v){d.close();ok(v)};F("akOk").onclick=function(){done(c?c.value.trim():true)};F("akNo").onclick=function(){done(null)};d.oncancel=function(){ok(null)};d.showModal();if(c)c.focus()})}
+function thumb(b){var t=el("div","th");if(!b.f)return t;var im=el("img"),p=P[b.f];im.alt="";im.src=p&&p.url?p.url:"buku/"+enc(jpgName(b.f));im.onerror=function(){im.remove()};t.append(im);return t}
+function render(){var root=F("root"),Q=q.toLowerCase(),shown=0;root.replaceChildren();
+ fold().forEach(function(f){var L=D.books.map(function(b,i){return {b:b,i:i}}).filter(function(x){return x.b.c===f&&(!Q||(x.b.t+" "+x.b.a+" "+f).toLowerCase().indexOf(Q)>-1)});
+  if(Q&&!L.length)return;shown++;
+  var s=el("section","fold"),h=el("div","fh"),n=el("input");n.value=f;n.setAttribute("aria-label","Nama folder");
+  n.onchange=function(){renFolder(f,n.value.trim(),n)};
+  h.append(n,el("small","",D.books.filter(function(b){return b.c===f}).length+" buku"));
+  var ab=el("button","btn sm","+ Buku");ab.onclick=function(){openBook(-1,f)};var dl=el("button","btn g sm red","Hapus folder");dl.onclick=function(){delFolder(f)};h.append(ab,dl);s.append(h);
+  L.forEach(function(x){var r=el("div","row"),i=el("div","ri"),b=x.b;i.append(el("b","",b.t),el("small","",b.a+(b.f?"":" · PDF belum diunggah")+(P[b.f]&&P[b.f].pdf?" · PDF baru":"")));
+   var a=el("div","ra"),e=el("button","btn g sm","Ubah"),d=el("button","btn g sm red","Hapus");e.onclick=function(){openBook(x.i)};d.onclick=function(){delBook(x.i)};a.append(e,d);r.append(thumb(b),i,a);s.append(r)});
+  if(!L.length)s.append(el("p","none","Folder kosong. Tekan + Buku untuk mengisinya."));root.append(s)});
+ if(!shown)root.append(el("p","none",Q?"Tidak ada yang cocok.":"Belum ada folder. Tekan + Folder baru."));
+ var d=dirty(),n=Object.keys(P).length;F("st").className="status"+(d?" dirty":"");
+ F("stx").innerHTML=d?"<b>Ada perubahan belum diterbitkan.</b>"+(n?" "+n+" file baru ikut dikemas.":""):"Sama dengan versi di situs. <b>"+D.books.length+" buku</b>, "+fold().length+" folder.";
+ F("dl").textContent=n?"Unduh paket ("+n+" file)":"Unduh buku.js";F("dl").disabled=!d;
+ var g=F("gone");g.hidden=!gone.length;g.textContent=gone.length?"Boleh dihapus manual dari folder buku di GitHub (sudah tidak dipakai): "+gone.join(", "):""}
+async function addFolder(){var v=await ask({title:"Folder baru",input:"",ph:"mis. Fikih Muamalah"});if(!v)return;if(fold().indexOf(v)>-1)return toast("Nama folder sudah ada");D.folders.push(v);touch("Folder ditambahkan")}
+function renFolder(o,v,inp){if(!v||v===o){inp.value=o;return}if(fold().indexOf(v)>-1){inp.value=o;return toast("Nama folder sudah ada")}
+ D.books.forEach(function(b){if(b.c===o)b.c=v});D.folders=D.folders.map(function(x){return x===o?v:x});touch("Nama folder diubah")}
+async function delFolder(f){var L=D.books.filter(function(b){return b.c===f});
+ if(!L.length){D.folders=D.folders.filter(function(x){return x!==f});return touch("Folder dihapus")}
+ var op=fold().filter(function(x){return x!==f}).map(function(x){return [x,"Pindahkan buku ke "+x]}).concat([["__del","Hapus bukunya dari daftar"]]);
+ var v=await ask({title:"Hapus folder "+f,text:L.length+" buku ada di folder ini. Mau diapakan?",options:op,ok:"Hapus folder",danger:1});if(!v)return;
+ if(v==="__del"){if(L.length>=D.books.length)return toast("Daftar buku tidak boleh kosong");L.forEach(function(b){drop(b)})}else L.forEach(function(b){b.c=v});
+ D.folders=D.folders.filter(function(x){return x!==f});touch("Folder dihapus")}
+function drop(b){D.books.splice(D.books.indexOf(b),1);if(b.f){delete P[b.f];if(gone.indexOf(b.f)<0)gone.push(b.f);var j=jpgName(b.f);if(gone.indexOf(j)<0)gone.push(j)}}
+async function delBook(i){var b=D.books[i];if(D.books.length<2)return toast("Daftar buku tidak boleh kosong");
+ if(await ask({title:"Hapus buku?",text:b.t+" dihapus dari daftar web.",ok:"Hapus",danger:1})){drop(b);touch("Buku dihapus")}}
+/* ---- PDF & sampul ---- */
+var pdfP;function lj(){return pdfP||(pdfP=new Promise(function(ok,no){if(window.pdfjsLib)return ok(pdfjsLib);var s=el("script");s.src=PDFJS+"pdf.min.js";s.onload=function(){pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.js";ok(pdfjsLib)};s.onerror=function(){pdfP=null;no()};document.head.append(s)}))}
+async function pdfInfo(file){var lib=await lj(),doc=await lib.getDocument({data:await file.arrayBuffer()}).promise,pg=doc.numPages,page=await doc.getPage(1),v=page.getViewport({scale:1}),vp=page.getViewport({scale:560/v.width}),c=document.createElement("canvas");
+ c.width=vp.width|0;c.height=vp.height|0;await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+ var jpg=await new Promise(function(r){c.toBlob(r,"image/jpeg",.85)});doc.destroy();return {pg:pg,jpg:jpg}}
+async function toJpg(file){var u=URL.createObjectURL(file),im=new Image();im.src=u;await im.decode();var k=Math.min(1,700/im.height),c=document.createElement("canvas");c.width=im.width*k|0;c.height=im.height*k|0;
+ c.getContext("2d").drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);return new Promise(function(r){c.toBlob(r,"image/jpeg",.88)})}
+function prev(blob){F("cvi").style.display=blob?"block":"none";if(blob)F("cvi").src=URL.createObjectURL(blob)}
+function openBook(i,folder){var b=i>=0?D.books[i]:{};cur={i:i,pdf:null,jpg:null,user:0};F("dT").textContent=i>=0?"Ubah buku":"Tambah buku";
+ F("aT").value=b.t||"";F("aA").value=b.a||"";var fs=fold();if(!fs.length)fs.push("Umum");var s=F("aC");s.replaceChildren();fs.forEach(function(x){var o=el("option","",x);o.value=x;s.append(o)});s.value=b.c||folder||fs[0];
+ F("aD").value=b.d||"";F("aP").value=b.pub||"";F("aY").value=b.yr||"";F("aG").value=b.pg||"";F("aR").value=b.r||"";F("aS").checked=!!b.star;F("aF").value="";F("aI").value="";
+ F("pf").textContent=b.f?"File saat ini: "+b.f+". Pilih file baru hanya bila ingin menggantinya.":"Belum ada PDF. Buku akan tampil sebagai Segera hadir.";
+ var p=P[b.f||""];F("cvi").style.display="block";F("cvi").onerror=function(){F("cvi").style.display="none"};F("cvi").src=b.f?(p&&p.url?p.url:"buku/"+enc(jpgName(b.f))):"";if(!b.f)F("cvi").style.display="none";
+ F("err").textContent="";F("dlg").showModal()}
+F("aF").onchange=async function(e){var f=e.target.files[0];if(!f)return;cur.pdf=f;F("pf").textContent="Membaca PDF…";
+ try{var r=await pdfInfo(f);if(!cur.user){cur.jpg=r.jpg;prev(r.jpg)}F("aG").value=r.pg;F("pf").textContent=f.name+" ("+(f.size/1048576).toFixed(1)+" MB, "+r.pg+" halaman)"}
+ catch(x){F("pf").textContent=f.name+" (sampul otomatis gagal, pilih foto sampul sendiri)"}
+ if(!F("aT").value)F("aT").value=f.name.replace(/\.pdf$/i,"").replace(/[-_]+/g," ")};
+F("aI").onchange=async function(e){var f=e.target.files[0];if(!f)return;try{cur.jpg=await toJpg(f);cur.user=1;prev(cur.jpg)}catch(x){F("err").textContent="Foto sampul tidak bisa dibaca."}};
+F("form").onsubmit=function(e){e.preventDefault();var t=F("aT").value.trim();if(!t)return void(F("err").textContent="Judul wajib diisi.");
+ var b=cur.i>=0?D.books[cur.i]:{f:""},num=function(id){return parseFloat(F(id).value.replace(",","."))||0},set=function(k,v){if(v)b[k]=v;else delete b[k]};
+ b.t=t;b.a=F("aA").value.trim()||"Tanpa penulis";b.c=F("aC").value;set("d",F("aD").value.trim());set("pub",F("aP").value.trim());set("yr",num("aY"));set("pg",num("aG"));set("r",Math.min(5,num("aR")));set("star",F("aS").checked?1:0);
+ if(cur.pdf){if(!b.f)b.f=uniq(t);var o=P[b.f]||{};o.pdf=cur.pdf;o.jpg=cur.jpg||o.jpg;P[b.f]=o}
+ else if(cur.jpg&&b.f){P[b.f]=P[b.f]||{};P[b.f].jpg=cur.jpg}
+ if(P[b.f]&&P[b.f].jpg)P[b.f].url=URL.createObjectURL(P[b.f].jpg);
+ if(cur.i<0)D.books.push(b);F("dlg").close();touch("Tersimpan")};
+F("cx").onclick=function(){F("dlg").close()};
+/* ---- Unduh: buku.js, atau zip bila ada file baru ---- */
+var CT=[];for(var n=0;n<256;n++){var c=n;for(var k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;CT[n]=c>>>0}
+function crc(u){var c=-1;for(var i=0;i<u.length;i++)c=CT[(c^u[i])&255]^(c>>>8);return(c^-1)>>>0}
+async function zip(files){var parts=[],cen=[],off=0,te=new TextEncoder();
+ for(var j=0;j<files.length;j++){var f=files[j],u=new Uint8Array(await f.b.arrayBuffer()),nm=te.encode(f.n),cc=crc(u),h=new DataView(new ArrayBuffer(30)),g=new DataView(new ArrayBuffer(46));
+  h.setUint32(0,0x04034b50,true);h.setUint16(4,20,true);h.setUint16(6,0x0800,true);h.setUint16(12,0x5821,true);h.setUint32(14,cc,true);h.setUint32(18,u.length,true);h.setUint32(22,u.length,true);h.setUint16(26,nm.length,true);
+  g.setUint32(0,0x02014b50,true);g.setUint16(4,20,true);g.setUint16(6,20,true);g.setUint16(8,0x0800,true);g.setUint16(14,0x5821,true);g.setUint32(16,cc,true);g.setUint32(20,u.length,true);g.setUint32(24,u.length,true);g.setUint16(28,nm.length,true);g.setUint32(42,off,true);
+  parts.push(h,nm,u);cen.push(g,nm);off+=30+nm.length+u.length}
+ var cs=0;cen.forEach(function(x){cs+=x.byteLength});var e=new DataView(new ArrayBuffer(22));e.setUint32(0,0x06054b50,true);e.setUint16(8,files.length,true);e.setUint16(10,files.length,true);e.setUint32(12,cs,true);e.setUint32(16,off,true);
+ return new Blob(parts.concat(cen,[e]),{type:"application/zip"})}
+function save(b,name){var a=el("a");a.href=URL.createObjectURL(b);a.download=name;document.body.append(a);a.click();a.remove()}
+F("dl").onclick=async function(){if(!D.books.length)return toast("Minimal harus ada 1 buku");
+ var js=new Blob(["window.PERPUS="+JSON.stringify(D,null,1)+";\n"],{type:"text/javascript"}),ks=Object.keys(P);
+ if(!ks.length)save(js,"buku.js");else{toast("Menyusun paket, mohon tunggu…");var fs=[{n:"buku.js",b:js}];
+  ks.forEach(function(f){var p=P[f];if(p.pdf)fs.push({n:"buku/"+f,b:p.pdf});if(p.jpg)fs.push({n:"buku/"+jpgName(f),b:p.jpg})});save(await zip(fs),"paket-perpustakaan.zip")}
+ window._saved=true;toast("Terunduh. Sekarang unggah ke GitHub.")};
+F("nf").onclick=addFolder;F("nb").onclick=function(){openBook(-1)};
+var sd;F("q").oninput=function(e){clearTimeout(sd);sd=setTimeout(function(){q=e.target.value;render()},140)};
+render();
+})();
+</script></body></html>

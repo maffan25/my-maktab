@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FAF6EE">
+<title>Affan's Library</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📖%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#FFFEFB;--bg:#FAF6EE;--cream:#F3EBDC;--sand:#E6D8BF;--taupe:#C9B896;
+--ink:#33291F;--mute:#75664F;--gold:#A98544;--gold-d:#7C6026;--champ:#E3CD9B;
+--line:rgba(110,86,50,.17);--e:cubic-bezier(.22,.8,.2,1);
+--btn:linear-gradient(180deg,#43362A,#2B2118);
+--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .9 0 0 0 -.3'/%3E%3C/filter%3E%3Crect width='90' height='90' filter='url(%23n)'/%3E%3C/svg%3E")}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{min-height:100vh;color:var(--ink);font:500 15px/1.55 Manrope,system-ui,sans-serif;overflow-x:hidden;background:var(--bg);padding-bottom:env(safe-area-inset-bottom,0)}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(60% 40% at 50% -8%,#fff,transparent 70%),radial-gradient(50% 40% at 100% 8%,rgba(230,210,170,.38),transparent 70%),radial-gradient(50% 45% at 0% 55%,rgba(225,208,176,.42),transparent 70%),radial-gradient(60% 40% at 70% 112%,rgba(214,192,150,.35),transparent 70%),linear-gradient(180deg,#FDFBF6,#F4ECDD)}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.05;background:var(--grain)}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none;-webkit-tap-highlight-color:transparent}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#bar{position:fixed;top:0;left:0;right:0;height:3px;z-index:70;background:linear-gradient(90deg,var(--gold),var(--champ));transform:scaleX(0);transform-origin:0}
+
+/* ===== Navigasi ===== */
+.nav{position:fixed;z-index:30;top:max(12px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);width:min(1160px,calc(100% - 24px));display:flex;align-items:center;gap:12px;padding:7px 7px 7px 10px;border-radius:999px;background:rgba(255,254,251,.82);-webkit-backdrop-filter:blur(16px) saturate(1.2);backdrop-filter:blur(16px) saturate(1.2);box-shadow:0 0 0 1px var(--line),0 18px 36px -22px rgba(90,65,25,.45)}
+.logo{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;background:linear-gradient(180deg,#F3E6C8,#D9BF86)}
+.logo svg{width:20px;height:20px;stroke:#3a2c14}
+.nav h1{font:400 27px/1 "Instrument Serif",Georgia,serif;white-space:nowrap;letter-spacing:-.01em}
+.search{flex:1;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px;border-radius:999px;background:rgba(243,235,220,.7);border:1px solid transparent;min-width:0;transition:background .2s,border-color .2s}
+.search:focus-within{border-color:var(--gold);background:#fff}
+.search input{flex:1;border:0;background:none;outline:0;min-width:0}
+.search input::placeholder{color:rgba(80,62,35,.5)}
+.search svg{color:var(--mute);flex:none}
+.btn{height:46px;padding:0 24px;border-radius:999px;font-weight:700;font-size:14px;color:#F6EAD0;background:var(--btn);white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .2s var(--e),box-shadow .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 14px 22px -14px rgba(43,33,24,.75)}
+.btn.g{background:rgba(255,254,251,.85);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+.btn.g:hover{box-shadow:inset 0 0 0 1px var(--gold),0 12px 20px -16px rgba(90,65,25,.6)}
+.nav .btn{height:40px;padding:0 18px}
+
+/* ===== Hero ===== */
+.wrap{position:relative;z-index:1;max-width:1160px;margin:auto;padding:0 20px 90px}
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:28px;align-items:center;min-height:min(100vh,760px);padding-top:90px}
+.hi{min-width:0;position:relative;z-index:2}
+.tag{display:inline-flex;gap:9px;align-items:center;font-size:12.5px;font-weight:600;padding:6px 14px;border-radius:999px;background:rgba(255,254,251,.8);box-shadow:inset 0 0 0 1px var(--line);color:var(--mute)}
+.tag i{width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.hi h2{font:400 clamp(44px,6.4vw,92px)/.96 "Instrument Serif",Georgia,serif;letter-spacing:-.025em;margin:20px 0 14px;overflow-wrap:anywhere;min-height:1em}
+.w{display:inline-block;margin-right:.22em;animation:wr .7s var(--e) both;animation-delay:calc(var(--i)*60ms)}
+@keyframes wr{from{opacity:0;transform:translateY(40%)}}
+.ha{font-weight:700}
+.hr{color:var(--gold-d);font-weight:700;font-size:13px;margin-top:2px}
+.hd{color:var(--mute);max-width:42ch;margin-top:10px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.hb{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap}
+.dots{display:flex;gap:8px;margin-top:34px;align-items:center}
+.dots button{height:8px;width:8px;border-radius:8px;background:rgba(80,60,30,.2);transition:width .4s var(--e),background .3s}
+.dots button.on{width:38px;background:var(--ink)}
+
+/* Coverflow + lengkung krem */
+.stage{position:relative;height:min(600px,62vw);perspective:1500px;touch-action:pan-y;outline:0;user-select:none;overflow:hidden;contain:layout paint}
+.stage::before{content:"";position:absolute;left:50%;top:5%;bottom:7%;width:min(58%,400px);transform:translateX(-50%);border-radius:999px 999px 30px 30px;background:linear-gradient(180deg,#FFFEFB 0%,#F4EBDA 45%,#E7D9BF 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 0 0 1px var(--line),0 40px 70px -46px rgba(90,65,25,.55)}
+.rail{position:absolute;inset:0;transform-style:preserve-3d}
+.floor{position:absolute;left:24%;right:24%;bottom:9%;height:46px;border-radius:50%;background:radial-gradient(rgba(70,45,10,.4),transparent 70%);filter:blur(8px)}
+.cf{--w:clamp(160px,19vw,250px);position:absolute;left:50%;top:50%;width:var(--w);margin:calc(var(--w)*-.78) 0 0 calc(var(--w)*-.5);cursor:pointer;will-change:transform,opacity}
+.stage.ready .cf{transition:transform .7s var(--e),opacity .5s}
+
+/* ===== Sampul buku ===== */
+.cover{--c1:#EFE4CE;--c2:#D5C3A0;--tx:#4A3A27;--fl:#A98544;--tsh:0 1px 0 rgba(255,255,255,.5);--sx:30%;position:relative;aspect-ratio:2/3;container-type:inline-size;display:block;color:var(--tx)}
+.pages{position:absolute;top:1.2%;bottom:1.2%;left:50%;right:-2.8%;border-radius:0 3px 3px 0;background:repeating-linear-gradient(90deg,#fbf5e6 0 1px,#dccfae 1px 2px);box-shadow:inset -2px 0 3px rgba(0,0,0,.15)}
+.rb{position:absolute;right:14cqw;bottom:-5cqw;width:5cqw;height:11cqw;background:linear-gradient(90deg,#9C7B3A,#D9BF86 50%,#9C7B3A);clip-path:polygon(0 0,100% 0,100% 100%,50% 82%,0 100%)}
+.bd{position:absolute;inset:0;border-radius:3px 9px 9px 3px;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;padding:11cqw 10cqw 10cqw 21cqw;background:linear-gradient(150deg,var(--c1),var(--c2));box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),inset 0 -26px 30px -18px rgba(60,40,10,.3),0 26px 34px -20px rgba(60,40,10,.6),0 6px 10px -4px rgba(60,40,10,.3)}
+.bd::before{content:"";z-index:3;position:absolute;left:0;top:0;bottom:0;width:13%;background:linear-gradient(90deg,rgba(0,0,0,.28),rgba(255,255,255,.24) 22%,rgba(0,0,0,.16) 60%,rgba(0,0,0,.3) 64%,rgba(255,255,255,.2) 70%,transparent)}
+.bd::after{content:"";z-index:3;position:absolute;inset:0;pointer-events:none;background:radial-gradient(120% 90% at 30% 15%,rgba(255,255,255,.25),transparent 55%)}
+.fr{position:absolute;inset:5cqw 5cqw 5cqw 17cqw;border:1px solid var(--fl);opacity:.85;pointer-events:none}
+.fr::before{content:"";position:absolute;inset:1.6cqw;border:1px solid var(--fl);opacity:.45}
+.orn{width:8cqw;height:8cqw;flex:none;color:var(--fl)}
+.mid{width:100%;min-width:0}
+.cover strong{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;padding-bottom:.08em;font:400 11.5cqw/1.05 "Instrument Serif",Georgia,serif;text-wrap:balance;overflow-wrap:anywhere;color:var(--tx);text-shadow:var(--tsh)}
+.rule{display:block;position:relative;width:38%;height:1px;margin:5cqw auto 0;background:linear-gradient(90deg,transparent,var(--fl),transparent)}
+.rule::after{content:"";position:absolute;left:50%;top:-2px;width:5px;height:5px;background:var(--fl);transform:translateX(-50%) rotate(45deg)}
+.au{font:600 3.8cqw/1.3 Manrope,sans-serif;font-style:normal;letter-spacing:.14em;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx);opacity:.8}
+.sh{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(112deg,transparent calc(var(--sx) - 20%),rgba(255,255,255,.22) var(--sx),transparent calc(var(--sx) + 20%))}
+.bd img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2;opacity:0;transition:opacity .5s}
+.real .bd img{opacity:1}
+.real .fr,.real .orn,.real .mid,.real .au{visibility:hidden}
+.real .bd::before{opacity:.55}
+
+/* ===== Rak buku ===== */
+.chips{position:sticky;top:calc(max(12px,env(safe-area-inset-top)) + 64px);z-index:20;display:flex;gap:6px;overflow-x:auto;padding:6px;margin:0 auto;width:max-content;max-width:100%;border-radius:999px;background:rgba(255,254,251,.82);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);scrollbar-width:none;box-shadow:0 0 0 1px var(--line),0 14px 26px -20px rgba(90,65,25,.5)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;height:38px;padding:0 16px;border-radius:999px;font-weight:600;font-size:13px;color:var(--mute);display:flex;align-items:center;gap:7px;transition:background .3s,color .3s}
+.chip b{font-size:11px;opacity:.7}
+.chip.on{background:var(--btn);color:#F6EAD0}
+.sh-head{display:flex;align-items:baseline;justify-content:space-between;margin:54px 0 26px;padding-bottom:12px;border-bottom:1px solid var(--line);gap:10px;scroll-margin-top:150px}
+.sh-head h2{font:400 clamp(32px,5vw,52px)/1 "Instrument Serif",Georgia,serif;letter-spacing:-.02em}
+.sh-head span{font-size:13px;color:var(--mute);font-weight:600;white-space:nowrap}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(176px,1fr));gap:40px 28px}
+.card{position:relative;min-width:0}
+.card:hover{z-index:4}
+.tw{perspective:800px;padding-bottom:14px}
+.bk{display:block;width:100%;text-align:left}
+.cv{transition:transform .5s var(--e);cursor:pointer}
+.cv.hot{transition:transform .1s linear}
+.meta{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;margin-top:12px;cursor:pointer}
+.tx{min-width:0;flex:1}
+.card h3{font-size:14.5px;font-weight:700;line-height:1.3;overflow-wrap:anywhere}
+.card small{color:var(--mute);font-size:12.5px;display:block;overflow-wrap:anywhere}
+.cnt{color:var(--gold-d);font-weight:700;font-size:12px;margin-top:4px}
+.mb{display:none;height:3px;border-radius:3px;background:rgba(110,86,50,.15);margin-top:6px;overflow:hidden}
+.mb i{display:block;height:100%;width:0;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--champ))}
+.fav{flex:none;width:36px;height:36px;border-radius:50%;background:rgba(255,254,251,.9);box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center}
+.fav svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:2}
+.fav.on svg{fill:#D85A52;stroke:#D85A52}
+.fav.pop{animation:pop .4s var(--e)}
+@keyframes pop{40%{transform:scale(1.35)}}
+.shake{animation:sk .5s}
+@keyframes sk{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.none{text-align:center;color:var(--mute);padding:70px 10px}
+
+/* ===== Animasi buka buku ===== */
+.ov{position:fixed;inset:0;z-index:80;display:grid;place-items:center;perspective:1300px;background:rgba(250,246,238,0);transition:background .4s;pointer-events:none}
+.ov.on{background:rgba(250,246,238,.96)}
+.ob{width:min(230px,48vw);aspect-ratio:2/3;position:relative;transform-style:preserve-3d;opacity:0;transform:scale(.6) rotateY(-25deg);transition:transform 1.1s var(--e),opacity .4s}
+.ov.on .ob{opacity:1;transform:scale(1) rotateY(-22deg)}
+.ov.on .ob.open{transform:scale(1.15) translateX(48%) rotateY(0)}
+.ob>*{position:absolute;inset:0;transform-origin:left center}
+.ob>.cover{aspect-ratio:auto}
+.ob .pages,.ob .rb{display:none}
+.pg,.pl{background:repeating-linear-gradient(#FFFCF3 0 15px,#ECE2CB 15px 16px);border-radius:3px 10px 10px 3px;box-shadow:0 24px 50px -20px rgba(60,40,10,.55)}
+.pl,.ob>.cover{transition:transform 1.1s cubic-bezier(.6,0,.2,1)}
+.ob>.cover{backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.ob.open>.cover{transform:rotateY(-168deg)}
+.ob.open .pl{transform:rotateY(-166deg)}
+
+/* ===== Dialog ===== */
+dialog{border:0;border-radius:30px;padding:0;width:min(460px,92vw);max-height:92vh;overflow:auto;background:linear-gradient(180deg,#FFFEFB,#F8F1E3);color:var(--ink);box-shadow:0 40px 90px -24px rgba(50,35,12,.5),0 0 0 1px var(--line)}
+dialog[open]{animation:dg .4s var(--e)}
+@keyframes dg{from{opacity:0;transform:translateY(24px)}}
+dialog::backdrop{background:rgba(51,41,31,.38);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#dlg{padding:28px}
+dialog h2{font:400 34px "Instrument Serif",Georgia,serif}
+#dlg>p{color:var(--mute);margin:6px 0 12px;font-size:13.5px}
+.f{display:block;font-size:12.5px;font-weight:700;margin-top:10px}
+.f input{display:block;width:100%;margin-top:5px;height:44px;border:0;border-radius:14px;padding:0 14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0}
+.f input:focus{box-shadow:inset 0 0 0 1.5px var(--gold),0 0 0 4px rgba(169,133,68,.16)}
+pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14px;font-size:12px;white-space:pre-wrap;word-break:break-all}
+.act{display:flex;gap:10px;justify-content:flex-end;margin-top:14px}
+
+/* Jendela detail buku */
+#det{width:min(900px,94vw)}
+.dt{display:grid;grid-template-columns:290px minmax(0,1fr);position:relative}
+.dcv{display:flex;align-items:center;justify-content:center;padding:44px 34px;background:linear-gradient(180deg,#FFFEFB,#F1E7D3);border-right:1px solid var(--line)}
+.dcv .cover{width:100%}
+.dr{padding:38px 38px 32px;min-width:0}
+.x{position:absolute;right:14px;top:12px;width:38px;height:38px;border-radius:50%;font-size:22px;line-height:1;color:var(--mute);background:rgba(255,254,251,.9);box-shadow:inset 0 0 0 1px var(--line);z-index:2}
+.dcat{display:inline-block;font-size:12.5px;font-weight:700;color:var(--gold-d);padding:4px 12px;border-radius:999px;background:rgba(227,205,155,.35)}
+.dr h2{font:400 clamp(32px,5vw,46px)/1 "Instrument Serif",Georgia,serif;letter-spacing:-.02em;margin:12px 38px 4px 0;overflow-wrap:anywhere}
+.dau{color:var(--mute);font-weight:600}
+.stars{display:flex;align-items:center;gap:0;margin-top:14px;flex-wrap:wrap}
+.st{font-size:28px;line-height:1;padding:2px;color:transparent;background:linear-gradient(90deg,#C9A24E var(--f,0%),rgba(110,86,50,.2) var(--f,0%));-webkit-background-clip:text;background-clip:text;transition:transform .2s var(--e)}
+.st:hover{transform:scale(1.15)}
+.rt{font-size:13px;font-weight:600;color:var(--mute);margin-left:10px}
+.ds{margin-top:16px;color:#4b4030;line-height:1.7;max-width:60ch}
+.sec{margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+.sec h4{font:400 22px/1 "Instrument Serif",Georgia,serif;margin-bottom:12px}
+.idl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 22px;font-size:13.5px}
+.idl dt{color:var(--mute)}.idl dd{font-weight:600;margin:0;overflow-wrap:anywhere}
+.tr{height:8px;border-radius:8px;background:rgba(110,86,50,.14);overflow:hidden}
+.fl{height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,var(--gold),var(--champ));transition:width .5s var(--e)}
+.pt{font-size:13.5px;font-weight:600;margin-bottom:9px;display:flex;justify-content:space-between;gap:10px}
+.pt b{color:var(--gold-d)}
+.rg{width:100%;margin-top:14px;accent-color:var(--gold)}
+.pc{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.pc label{font-size:12.5px;font-weight:700;color:var(--mute)}
+.pc input{width:92px;height:40px;border:0;border-radius:12px;padding:0 10px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0}
+.pc input:focus{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.pc .btn{height:40px;padding:0 16px}
+.da{display:flex;gap:10px;margin-top:24px;flex-wrap:wrap}
+@media(max-width:700px){
+ #det{width:100%;max-width:none;margin:auto 0 0;border-radius:28px 28px 0 0;max-height:94dvh}
+ .dt{grid-template-columns:1fr}
+ .dcv{padding:30px 0 22px;border-right:0;border-bottom:1px solid var(--line)}
+ .dcv .cover{width:150px}
+ .dr{padding:22px 20px calc(18px + env(safe-area-inset-bottom,0px))}
+ .dr h2{margin-right:0}
+ .da{position:sticky;bottom:0;margin:22px -20px 0;padding:14px 20px;background:linear-gradient(180deg,rgba(248,241,227,0),#F8F1E3 30%)}
+ .da .btn{flex:1}
+ #det[open]{animation:sheet .45s var(--e)}
+}
+@keyframes sheet{from{transform:translateY(100%)}}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:#2B2118;color:#F6EAD0;padding:12px 22px;border-radius:999px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.3s var(--e);z-index:95;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ===== Pembaca PDF ===== */
+#rd{position:fixed;inset:0;z-index:85;display:none;flex-direction:column;background:#EDE3D0;opacity:0;transition:opacity .45s}
+#rd.on{display:flex}#rd.vis{opacity:1}
+.rbar,.rfoot{display:flex;align-items:center;gap:10px;background:rgba(255,254,251,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.rbar{padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;border-bottom:1px solid var(--line)}
+.rfoot{justify-content:center;gap:14px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.ib{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:none;background:rgba(255,255,255,.9);box-shadow:inset 0 0 0 1px var(--line);text-decoration:none}
+.ib svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ib:disabled{opacity:.35;cursor:default}
+.rtt{flex:1;min-width:0}
+.rtt b{display:block;font:400 21px/1.1 "Instrument Serif",Georgia,serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtt small{display:block;color:var(--mute);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rtrack{height:3px;background:rgba(110,86,50,.15)}
+.rtrack i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--champ));transition:width .3s}
+.rview{flex:1;min-height:0;overflow:auto;display:flex;padding:16px;position:relative;touch-action:pan-y;overscroll-behavior:contain}
+.rview.z{touch-action:auto}
+#rStage{margin:auto;flex:none}
+.rpage{display:block;background:#fff;box-shadow:0 30px 60px -30px rgba(60,40,10,.55),0 0 0 1px rgba(60,40,10,.08);animation:pgin .2s ease-out}
+@keyframes pgin{from{opacity:0}}
+.rmsg{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;text-align:center;gap:14px;color:var(--mute);padding:20px;pointer-events:none}
+.rmsg.hide{display:none}
+.rmsg a{pointer-events:auto;text-decoration:none}
+.rpg{display:flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--mute)}
+.rpg input{width:64px;height:40px;text-align:center;border:0;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0;color:var(--ink)}
+.rpg input:focus{box-shadow:inset 0 0 0 1.5px var(--gold)}
+.rpg input::-webkit-outer-spin-button,.rpg input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.rpg input{-moz-appearance:textfield}
+
+@media(max-width:860px){
+.hero{grid-template-columns:1fr;padding-top:84px;min-height:0;gap:0;text-align:center}
+.stage{order:-1;height:min(400px,95vw)}
+.cf{--w:clamp(130px,38vw,190px)}
+.hi{display:flex;flex-direction:column;align-items:center}
+.hd{margin-inline:auto}.hb,.dots{justify-content:center}
+.nav h1{display:none}.nav .btn span{display:none}.nav .btn{width:40px;padding:0;justify-content:center;font-size:20px}
+.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:34px 16px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before{animation:none!important;transition-duration:.01s!important}}
+
+/* ===== Perbaikan tata letak: titik hero tidak lagi menempel di filter ===== */
+.hero{padding-bottom:52px}
+.dots button{position:relative}
+.dots button::after{content:"";position:absolute;inset:-12px -4px}
+.dots button:active{transform:scale(.75)}
+.chips{margin:0 auto}
+.chip{position:relative;z-index:1;transition:color .3s,transform .25s var(--e)}
+.chip.on{background:none}
+.ind{position:absolute;left:0;top:6px;height:38px;width:0;border-radius:999px;background:var(--btn);z-index:0;box-shadow:0 10px 16px -10px rgba(43,33,24,.85);transition:transform .5s var(--e),width .5s var(--e)}
+#shelves.swap{animation:swp .4s var(--e)}
+@keyframes swp{from{opacity:0;transform:translateY(12px)}}
+
+/* ===== Animasi tombol: tekan + riak ===== */
+.btn,.chip,.ib,.fav,.fold-entry,.fcard,.frow{position:relative;overflow:hidden;-webkit-user-select:none;user-select:none}
+.ib{transition:transform .25s var(--e),box-shadow .25s}
+.fav{transition:transform .25s var(--e)}
+.btn:active,.chip:active,.ib:not(:disabled):active,.fav:active{transform:scale(.92);transition-duration:.08s}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;background:currentColor;opacity:.28;transform:scale(0);animation:rip .65s var(--e) forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+
+/* ===== Animasi buku saat diklik ===== */
+.cv .cover,.cf .cover{transition:transform .25s var(--e)}
+.cv:active .cover,.cf:active .cover{transform:scale(.95)}
+.cover.pick{animation:pick .45s var(--e)}
+@keyframes pick{28%{transform:scale(.93)}62%{transform:scale(1.07) translateY(-3%);filter:brightness(1.06)}}
+
+/* ===== Folder PDF ===== */
+.fold-entry{display:flex;align-items:center;gap:14px;width:100%;max-width:520px;margin:0 auto 22px;padding:10px 18px 10px 10px;border-radius:26px;text-align:left;background:rgba(255,254,251,.85);box-shadow:inset 0 0 0 1px var(--line),0 18px 30px -24px rgba(90,65,25,.5);transition:transform .25s var(--e),box-shadow .25s}
+.fold-entry:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 1px var(--gold),0 22px 34px -24px rgba(90,65,25,.6)}
+.fold-entry:active{transform:scale(.97);transition-duration:.08s}
+.fe-ic{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;flex:none;background:linear-gradient(180deg,#F3E6C8,#D9BF86)}
+.fe-ic svg{width:30px;height:25px}
+.fe-tx{flex:1;min-width:0}
+.fe-tx b{display:block;font:400 26px/1 "Instrument Serif",Georgia,serif}
+.fe-tx small{color:var(--mute);font-size:12.5px;font-weight:600}
+.chev{flex:none;color:var(--mute);transition:transform .25s var(--e)}
+.fold-entry:hover .chev{transform:translateX(4px)}
+.fi path,.fi rect{transform-box:fill-box}
+.fi .fb{fill:#B8944F}
+.fi .fp{fill:#FFFEFB;transition:transform .35s var(--e)}
+.fi .ff{fill:#E8D3A1;transform-origin:50% 100%;transition:transform .35s var(--e)}
+.fcard:hover .fp,.fold-entry:hover .fp{transform:translateY(-7px)}
+.fcard:hover .ff,.fold-entry:hover .ff{transform:scaleY(.86)}
+
+#fv{position:fixed;inset:0;z-index:75;display:none;flex-direction:column;background:linear-gradient(180deg,#FDFBF6,#F1E8D6);opacity:0;transform:translateY(22px) scale(.985);transition:opacity .35s,transform .5s var(--e)}
+#fv.on{display:flex}
+#fv.vis{opacity:1;transform:none}
+.fsearch{flex:none;width:min(240px,40vw)}
+.fbody{flex:1;min-height:0;overflow:auto;padding:22px 20px calc(34px + env(safe-area-inset-bottom,0px));overscroll-behavior:contain}
+#fList{max-width:1000px;margin:auto}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.flist{display:grid;gap:10px;max-width:760px;margin:auto}
+.fcard{display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:18px;border-radius:26px;text-align:left;background:rgba(255,254,251,.88);box-shadow:inset 0 0 0 1px var(--line);transition:transform .3s var(--e),box-shadow .3s}
+.fcard:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px var(--gold),0 22px 30px -22px rgba(90,65,25,.55)}
+.fcard:active{transform:scale(.95);transition-duration:.08s}
+.fcard .fi{width:64px;height:52px}
+.fcard b{display:block;font:400 25px/1.05 "Instrument Serif",Georgia,serif;overflow-wrap:anywhere}
+.fcard small{color:var(--mute);font-size:12.5px;font-weight:600}
+.frow{display:flex;align-items:center;gap:14px;width:100%;padding:12px 16px 12px 12px;border-radius:22px;text-align:left;background:rgba(255,254,251,.88);box-shadow:inset 0 0 0 1px var(--line);transition:transform .25s var(--e),box-shadow .25s}
+.frow:hover{transform:translateX(3px);box-shadow:inset 0 0 0 1px var(--gold)}
+.frow:active{transform:scale(.98);transition-duration:.08s}
+.frow.off{opacity:.62}
+.pdf{width:44px;height:54px;flex:none;display:grid;place-items:end center;padding-bottom:7px;border-radius:9px 14px 9px 9px;background:linear-gradient(180deg,#43362A,#2B2118);color:#F6EAD0;font-size:10.5px;font-weight:700;letter-spacing:.06em}
+.ft{flex:1;min-width:0}
+.ft b{display:block;font-size:14.5px;line-height:1.3;overflow-wrap:anywhere}
+.ft small{color:var(--mute);font-size:12.5px}
+.fs{flex:none;font-style:normal;font-size:12px;font-weight:700;color:var(--gold-d)}
+.f-in>*{animation:fin .42s var(--e) both;animation-delay:calc(var(--i,0)*40ms)}
+.f-back>*{animation:fback .42s var(--e) both;animation-delay:calc(var(--i,0)*40ms)}
+@keyframes fin{from{opacity:0;transform:translateX(26px)}}
+@keyframes fback{from{opacity:0;transform:translateX(-26px)}}
+
+/* ===== Kehalusan & performa ===== */
+button,a,.cf,.card{touch-action:manipulation}
+#bar{will-change:transform}
+.card{contain:layout style}
+.grid .bd{box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 16px 22px -16px rgba(60,40,10,.55)}
+@media(pointer:coarse),(max-width:860px){
+ .nav,.chips,.rbar,.rfoot{-webkit-backdrop-filter:none;backdrop-filter:none}
+ .nav,.chips{background:rgba(255,254,251,.97)}
+ .rbar,.rfoot{background:rgba(255,254,251,.98)}
+ dialog::backdrop{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(51,41,31,.5)}
+}
+@media(pointer:coarse){body::after{display:none}}
+
+.fwrap,.frw{display:flex;gap:8px}.fwrap{flex-direction:column}.frw{align-items:center}.frw .frow{flex:1;min-width:0}
+.mini{height:34px;padding:0 14px;border-radius:999px;font-size:12.5px;font-weight:700;white-space:nowrap;background:rgba(255,254,251,.92);box-shadow:inset 0 0 0 1px var(--line);transition:box-shadow .2s}
+.mini:hover{box-shadow:inset 0 0 0 1px var(--gold)}.mini.d{color:#8A3B2B}
+.fadd{border:1.5px dashed var(--taupe);background:transparent;box-shadow:none;color:var(--gold-d);justify-content:center}
+.abar{display:flex;gap:8px;flex-wrap:wrap;max-width:760px;margin:0 auto 14px}
+#ask{padding:26px}.akp{color:var(--mute);margin-top:6px}
+#akW input,#akW select{display:block;width:100%;height:46px;margin-top:14px;border:0;border-radius:14px;padding:0 14px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);outline:0}
+#akW input:focus,#akW select:focus{box-shadow:inset 0 0 0 1.5px var(--gold),0 0 0 4px rgba(169,133,68,.16)}
+.btn.dng{background:linear-gradient(180deg,#8A3B2B,#5E2418)}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<header class="nav">
+  <div class="logo" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 19V5.5M9 7h6"/></svg></div>
+  <h1>Affan's Library</h1>
+  <label class="search"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="q" type="search" placeholder="Cari judul atau penulis" aria-label="Cari buku"></label>
+  <button class="btn g" id="foldNav" aria-label="Buka folder PDF"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Folder PDF</span></button>
+  <button class="btn" id="how" aria-label="Tambah buku">+<span>Tambah buku</span></button>
+</header>
+<div class="wrap">
+  <section class="hero">
+    <div class="hi" id="hi"></div>
+    <div class="stage" id="stage" tabindex="0" aria-label="Buku pilihan"><div class="floor"></div><div class="rail" id="rail"></div></div>
+  </section>
+  <button class="fold-entry" id="foldOpen" aria-label="Buka folder PDF"><span class="fe-ic"><svg class="fi" viewBox="0 0 64 52" aria-hidden="true"><path class="fb" d="M4 10a5 5 0 0 1 5-5h14l6 6h26a5 5 0 0 1 5 5v28a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><rect class="fp" x="12" y="13" width="40" height="26" rx="3"/><path class="ff" d="M4 22a5 5 0 0 1 5-5h46a5 5 0 0 1 5 5l-1.6 23a5 5 0 0 1-5 4.6H10.6a5 5 0 0 1-5-4.6z"/></svg></span><span class="fe-tx"><b>Folder PDF</b><small id="foldSub"></small></span><svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  <nav class="chips" id="chips" role="tablist"></nav>
+  <div id="shelves"></div>
+</div>
+
+<dialog id="dlg">
+  <h2>Tambah buku</h2>
+  <p>Upload PDF (dan foto sampulnya) ke folder <b>buku</b> di GitHub, lalu tambahkan satu baris di daftar BOOKS. Isi data di bawah untuk membuat barisnya.</p>
+  <label class="f">Judul<input id="aT"></label>
+  <label class="f">Penulis<input id="aA"></label>
+  <label class="f">Kategori<input id="aC" placeholder="mis. Fikih"></label>
+  <label class="f">Nama file PDF<input id="aF" placeholder="nama-buku.pdf"></label>
+  <label class="f">Deskripsi singkat<input id="aD"></label>
+  <label class="f">Penerbit<input id="aP"></label>
+  <label class="f">Tahun terbit<input id="aY" inputmode="numeric"></label>
+  <label class="f">Jumlah halaman (kosongkan = otomatis)<input id="aG" inputmode="numeric"></label>
+  <label class="f">Rating awal 1 sampai 5<input id="aR" inputmode="decimal" placeholder="mis. 4.5"></label>
+  <label class="f">Nama foto sampul (kosongkan jika sama dengan nama PDF)<input id="aI" placeholder="sampul.png"></label>
+  <pre id="out">Baris akan muncul di sini</pre>
+  <div class="act"><button class="btn g" id="cl">Tutup</button><button class="btn" id="cp">Salin baris</button></div>
+</dialog>
+<dialog id="ask"><h2 id="akT"></h2><p class="akp" id="akP"></p><div id="akW"></div><div class="act"><button class="btn g" id="akNo">Batal</button><button class="btn" id="akOk">Simpan</button></div></dialog>
+<dialog id="det"></dialog>
+
+<div id="rd" role="dialog" aria-modal="true" aria-label="Pembaca buku">
+  <div class="rbar">
+    <button class="ib" id="rX" aria-label="Tutup pembaca"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="rtt"><b id="rTitle"></b><small id="rAuth"></small></div>
+    <button class="ib" id="rZo" aria-label="Perkecil"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+    <button class="ib" id="rZi" aria-label="Perbesar"><svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg></button>
+    <a class="ib" id="rOpen" target="_blank" rel="noopener" aria-label="Buka PDF di tab baru"><svg viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+  </div>
+  <div class="rtrack"><i id="rFill"></i></div>
+  <div class="rview" id="rView">
+    <div id="rStage"></div>
+    <div class="rmsg" id="rMsg"><p id="rMt">Memuat buku…</p><a class="btn" id="rFall" target="_blank" rel="noopener" hidden>Buka PDF langsung</a></div>
+  </div>
+  <div class="rfoot">
+    <button class="ib" id="rPrev" aria-label="Halaman sebelumnya"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="rpg">Hal. <input id="rGo" type="number" min="1" inputmode="numeric" aria-label="Lompat ke halaman"><span id="rOf">/ 0</span></div>
+    <button class="ib" id="rNext" aria-label="Halaman berikutnya"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+  </div>
+</div>
+<div id="fv" role="dialog" aria-modal="true" aria-label="Folder PDF">
+  <div class="rbar">
+    <button class="ib" id="fBack" aria-label="Kembali"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <div class="rtt"><b id="fTitle">Folder PDF</b><small id="fSub"></small></div>
+    <label class="search fsearch"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="fq" type="search" placeholder="Cari file" aria-label="Cari file PDF"></label>
+  </div>
+  <div class="fbody"><div id="fList"></div></div>
+</div>
+<div id="toast" role="status"></div>
+
+<script src="buku.js"></script>
+<script>
+(()=>{
+/* ===== PENGATURAN GITHUB =====
+ Struktur repo:
+   index.html          (halaman ini)
+   buku/               (folder khusus buku)
+     nama-buku.pdf     (file buku)
+     nama-buku.jpg     (sampul asli, nama sama dengan PDF)
+ BASE boleh diisi alamat penuh, mis. "https://USERNAME.github.io/REPO/buku/" */
+const BASE="buku/";
+/* Jika tidak ada foto sampul, halaman pertama PDF otomatis dijadikan sampul. */
+const AUTO_PDF_COVER=true;
+const PDFJS="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/";
+
+/* ===== DAFTAR BUKU =====
+ {t:"Judul", a:"Penulis", c:"Kategori", f:"nama-file.pdf", star:1, img:"sampul.png",
+  d:"Deskripsi singkat", pub:"Penerbit", yr:2020, pg:320, r:4.5, lang:"Indonesia", isbn:"978-..."}
+ f    = nama file PDF di folder buku/ (boleh pakai subfolder, mis. "fikih/kitab.pdf").
+ img  = opsional. Jika kosong, dicari buku/nama-file.jpg (sama dengan nama PDF).
+        Kalau tidak ada, halaman pertama PDF dipakai. Kalau gagal, dipakai sampul bawaan.
+ pg   = opsional. Jika kosong, jumlah halaman dibaca otomatis dari PDF.
+ r    = rating awal 1 sampai 5 (nilaimu sendiri tersimpan di perangkat ini).
+ star = 1 untuk memprioritaskan buku di bagian atas sebelum ada riwayat bacaan.
+ Jika f dikosongkan, muncul pemberitahuan bahwa PDF belum diunggah. */
+const BOOKS=(window.PERPUS&&PERPUS.books)||[];
+/* Daftar buku kini ada di buku.js (diedit lewat admin-buku.html). */
+const FOLDER_EXTRA=(window.PERPUS&&PERPUS.folders)||[];
+/* Sampul bawaan (bila foto asli belum ada): [warna1, warna2, teks, garis, bayangan teks] */
+const HUES=[
+["#EFE4CE","#D5C3A0","#4A3A27","#A98544","0 1px 0 rgba(255,255,255,.5)"],
+["#FBF8F1","#E4D9C4","#3B2F22","#B39563","0 1px 0 rgba(255,255,255,.7)"],
+["#7B6249","#4B3A2A","#F3E6C8","#E3CD9B","0 1px 2px rgba(0,0,0,.4)"],
+["#D9C9AE","#B7A27C","#3C2F20","#7C6026","0 1px 0 rgba(255,255,255,.4)"],
+["#CFC9B4","#A49F85","#2F2C1E","#6E6A4C","0 1px 0 rgba(255,255,255,.4)"],
+["#2E2822","#16120E","#EBD9AE","#CBAE6C","0 1px 2px rgba(0,0,0,.5)"]
+];
+
+const $=s=>document.querySelector(s);
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const fine=matchMedia("(pointer:fine)").matches,calm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const LS=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}};
+let cat="Semua",query="",cnt=LS("cnt",{}),rate=LS("rate",{}),prog=LS("prog",{}),pgs=LS("pgs",{}),fav=new Set(LS("fav",[])),badges={},cur=0,auto=null,moved=false;
+const save=()=>{try{localStorage.setItem("fav",JSON.stringify([...fav]));localStorage.setItem("cnt",JSON.stringify(cnt));localStorage.setItem("rate",JSON.stringify(rate));localStorage.setItem("prog",JSON.stringify(prog));localStorage.setItem("pgs",JSON.stringify(pgs))}catch(e){}};
+const SIG=JSON.stringify([BOOKS,FOLDER_EXTRA]),DR=LS("draft",null),XF=[...FOLDER_EXTRA];let EDIT=false,DIRTY=false;
+if(DR&&DR.s===SIG){BOOKS.length=0;DR.b.forEach(x=>BOOKS.push(x));XF.length=0;XF.push(...(DR.x||[]))}
+const ADM=false;if(/[?&]kelola/.test(location.search))try{localStorage.setItem("adm","1")}catch(e){}
+BOOKS.forEach((b,i)=>{b.id=b.t+"|"+b.a;b.h=HUES[i%HUES.length];b.i=i;if(!b.pg&&pgs[b.id])b.pg=pgs[b.id]});
+const cats=()=>[...new Set(BOOKS.map(b=>b.c))];
+const n=b=>cnt[b.id]||0;
+const FEAT=[...BOOKS].sort((x,y)=>n(y)-n(x)||(y.star||0)-(x.star||0)||x.i-y.i).slice(0,6);
+const isUrl=s=>/^https?:/.test(s);
+const enc=s=>isUrl(s)?s:BASE+s.split("/").map(encodeURIComponent).join("/");
+const url=b=>enc(b.f);
+const heart='<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>';
+const orn='<svg class="orn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><rect x="5" y="5" width="14" height="14"/><rect x="5" y="5" width="14" height="14" transform="rotate(45 12 12)"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/></svg>';
+const rating=b=>rate[b.id]!=null?rate[b.id]:(b.r||0);
+const fmt=v=>String(Math.round(v*10)/10);
+const pct=b=>{const p=prog[b.id]||0;return b.pg&&p?Math.min(100,Math.round(p/b.pg*100)):0};
+const cntText=b=>{const p=prog[b.id]||0;if(p>0)return b.pg?pct(b)+"% selesai, hal. "+p:"Terakhir hal. "+p;return !b.f?"Segera hadir":n(b)?"Dibaca "+n(b)+" kali":"Siap dibaca"};
+function paint(b){const x=badges[b.id];if(!x)return;x.firstChild.textContent=cntText(b);const p=pct(b);x.lastChild.style.display=p?"block":"none";x.lastChild.firstChild.style.width=p+"%"}
+function setPages(b,v){if(!v||b.pg===v)return;b.pg=v;pgs[b.id]=v;save();paint(b)}
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.i);toast.i=setTimeout(()=>t.classList.remove("show"),2600)}
+
+/* ===== pdf.js (dimuat saat dibutuhkan) ===== */
+let pdfP=null;
+function loadPdfJs(){return pdfP||(pdfP=new Promise((ok,no)=>{
+ if(window.pdfjsLib)return ok(window.pdfjsLib);
+ const s=document.createElement("script");s.src=PDFJS+"pdf.min.js";
+ s.onload=()=>{window.pdfjsLib.GlobalWorkerOptions.workerSrc=PDFJS+"pdf.worker.min.js";ok(window.pdfjsLib)};
+ s.onerror=()=>{pdfP=null;no(new Error("pdfjs"))};document.head.append(s)}))}
+
+/* ===== Sampul: foto asli, lalu halaman pertama PDF, lalu sampul bawaan ===== */
+const probe=s=>new Promise(r=>{const i=new Image();i.onload=()=>r(true);i.onerror=()=>r(false);i.src=s});
+let thumbQ=Promise.resolve();
+function pdfThumb(b){const key="tn1:"+b.f;
+ try{const c=localStorage.getItem(key);if(c)return Promise.resolve(c)}catch(e){}
+ const job=async()=>{const lib=await loadPdfJs(),doc=await lib.getDocument({url:url(b),disableAutoFetch:true}).promise;
+  try{setPages(b,doc.numPages);const page=await doc.getPage(1),v0=page.getViewport({scale:1}),vp=page.getViewport({scale:320/v0.width}),c=document.createElement("canvas");
+   c.width=Math.round(vp.width);c.height=Math.round(vp.height);await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+   const u=c.toDataURL("image/jpeg",.82);try{localStorage.setItem(key,u)}catch(e){}return u}finally{doc.destroy()}};
+ const p=thumbQ.then(()=>new Promise(r=>window.requestIdleCallback?requestIdleCallback(()=>r(),{timeout:1500}):setTimeout(r,60))).then(job);thumbQ=p.catch(()=>{});return p}
+const covP={};
+function resolveCover(b){return covP[b.id]||(covP[b.id]=(async()=>{
+ const s=b.img?enc(b.img):(b.f&&!isUrl(b.f)?enc(b.f.replace(/\.pdf$/i,".jpg")):"");
+ if(s&&await probe(s))return s;
+ if(AUTO_PDF_COVER&&b.f){try{return await pdfThumb(b)}catch(e){}}
+ return null})())}
+const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){io.unobserve(en.target);en.target._ld&&en.target._ld()}}),{rootMargin:"400px"}):null;
+function cover(b){const d=el("div","cover");
+ ["--c1","--c2","--tx","--fl","--tsh"].forEach((k,i)=>d.style.setProperty(k,b.h[i]));
+ d.innerHTML='<i class="pages"></i><i class="rb"></i><div class="bd"><span class="fr"></span>'+orn+'<div class="mid"><strong></strong><span class="rule"></span></div><em class="au"></em><span class="sh"></span></div>';
+ d.querySelector("strong").textContent=b.t;d.querySelector(".au").textContent=b.a;
+ const ld=()=>resolveCover(b).then(src=>{if(!src)return;const im=new Image();im.alt=b.t;im.decoding="async";im.onload=()=>d.classList.add("real");im.src=src;d.querySelector(".bd").append(im)});
+ if(io){d._ld=ld;io.observe(d)}else ld();
+ return d}
+
+/* ===== Pembaca PDF (antarmuka baru) ===== */
+const rd=$("#rd"),rView=$("#rView"),rStage=$("#rStage"),rMsg=$("#rMsg"),rMt=$("#rMt"),rFall=$("#rFall"),rGo=$("#rGo"),rOf=$("#rOf"),rPrev=$("#rPrev"),rNext=$("#rNext"),rFill=$("#rFill");
+const RS={open:false,doc:null,b:null,n:1,z:1,tok:0,task:null,lt:null};
+const ZS=[1,1.5,2,3];
+function startLoad(b){return loadPdfJs().then(lib=>{const t=lib.getDocument({url:url(b)});RS.lt=t;
+ t.onProgress=p=>{if(RS.open&&!RS.doc&&p.total)rMt.textContent="Memuat buku "+Math.min(100,Math.round(p.loaded/p.total*100))+"%"};return t.promise})}
+async function openReader(b,loading,start){
+ RS.open=true;RS.b=b;RS.z=1;RS.doc=null;RS.n=start;rView.classList.remove("z");
+ $("#rTitle").textContent=b.t;$("#rAuth").textContent=b.a;$("#rOpen").href=url(b);
+ rMsg.classList.remove("hide");rMt.textContent="Memuat buku…";rFall.hidden=true;rStage.replaceChildren();
+ rGo.value=start;rOf.textContent="/ "+(b.pg||"…");rPrev.disabled=rNext.disabled=true;rFill.style.width="0";
+ rd.classList.add("on");requestAnimationFrame(()=>rd.classList.add("vis"));
+ document.documentElement.style.overflow="hidden";
+ try{history.pushState({rd:1},"")}catch(e){}
+ try{
+  const doc=await loading;
+  if(!RS.open||RS.b!==b){try{doc.destroy()}catch(e){}return}
+  RS.doc=doc;setPages(b,doc.numPages);rGo.max=doc.numPages;rOf.textContent="/ "+doc.numPages;rMsg.classList.add("hide");
+  show(Math.min(start,doc.numPages))
+ }catch(e){
+  if(!RS.open||RS.b!==b)return;
+  rMt.textContent="PDF tidak bisa ditampilkan di sini. Pastikan file ada di folder buku dan situs dibuka lewat alamat web (Vercel atau GitHub Pages).";
+  rFall.href=url(b);rFall.hidden=false}}
+async function show(num,keep){
+ const doc=RS.doc,b=RS.b;if(!doc)return;
+ num=Math.max(1,Math.min(doc.numPages,num));RS.n=num;const tok=++RS.tok;
+ rGo.value=num;rPrev.disabled=num<=1;rNext.disabled=num>=doc.numPages;rFill.style.width=(num/doc.numPages*100)+"%";
+ prog[b.id]=num;save();paint(b);info();
+ try{
+  const page=await doc.getPage(num);if(tok!==RS.tok)return;
+  const b0=page.getViewport({scale:1}),vw=rView.clientWidth-32,vh=rView.clientHeight-32;
+  const vp=page.getViewport({scale:Math.max(.2,Math.min(vw/b0.width,vh/b0.height))*RS.z});
+  let dpr=Math.min(devicePixelRatio||1,2);while(vp.width*vp.height*dpr*dpr>9e6&&dpr>1)dpr-=.25;
+  const c=el("canvas","rpage");c.width=Math.floor(vp.width*dpr);c.height=Math.floor(vp.height*dpr);c.style.width=vp.width+"px";c.style.height=vp.height+"px";
+  if(RS.task){try{RS.task.cancel()}catch(e){}}
+  const task=page.render({canvasContext:c.getContext("2d"),viewport:vp,transform:dpr!==1?[dpr,0,0,dpr,0,0]:null});RS.task=task;
+  await task.promise;if(tok!==RS.tok)return;
+  rStage.replaceChildren(c);if(!keep)rView.scrollTo(0,0);
+  if(num<doc.numPages)doc.getPage(num+1).catch(()=>{})
+ }catch(e){}}
+function turn(d){if(RS.doc)show(RS.n+d)}
+function zoom(d){const i=Math.max(0,Math.min(ZS.length-1,ZS.indexOf(RS.z)+d));RS.z=ZS[i];rView.classList.toggle("z",RS.z>1);show(RS.n,true)}
+function closeReader(fromPop){
+ if(!RS.open)return;RS.open=false;RS.tok++;
+ if(RS.task){try{RS.task.cancel()}catch(e){}}
+ if(RS.doc){try{RS.doc.destroy()}catch(e){}RS.doc=null}
+ if(RS.lt){try{RS.lt.destroy()}catch(e){}RS.lt=null}
+ rd.classList.remove("vis");document.documentElement.style.overflow="";
+ setTimeout(()=>{if(!RS.open){rd.classList.remove("on");rStage.replaceChildren()}},calm?20:450);
+ if(!fromPop&&history.state&&history.state.rd){try{history.back()}catch(e){}}}
+$("#rX").onclick=()=>closeReader();
+rPrev.onclick=()=>turn(-1);rNext.onclick=()=>turn(1);
+$("#rZi").onclick=()=>zoom(1);$("#rZo").onclick=()=>zoom(-1);
+rGo.onfocus=()=>rGo.select();rGo.onchange=()=>show(parseInt(rGo.value)||RS.n);
+addEventListener("popstate",()=>{if(RS.open)closeReader(true)});
+addEventListener("keydown",e=>{if(!RS.open)return;
+ if(e.key==="Escape"){closeReader();return}
+ if(e.target===rGo)return;
+ if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();turn(1)}
+ else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();turn(-1)}
+ else if(e.key==="+"||e.key==="="){zoom(1)}else if(e.key==="-"){zoom(-1)}});
+let sx=null,sy=0;
+rView.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY});
+rView.addEventListener("pointercancel",()=>{sx=null});
+rView.addEventListener("pointerup",e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(RS.z===1&&Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.6)turn(dx<0?1:-1)});
+let rzt;addEventListener("resize",()=>{if(!RS.open||!RS.doc)return;clearTimeout(rzt);rzt=setTimeout(()=>show(RS.n,true),180)});
+
+function read(b,src){
+ if(!b.f){toast("PDF buku ini belum diunggah ke folder buku");if(src){src.classList.remove("shake");void src.offsetWidth;src.classList.add("shake")}return}
+ cnt[b.id]=n(b)+1;save();paint(b);info();
+ const p=prog[b.id]||0,start=b.pg&&p>=b.pg?1:Math.max(1,p);
+ const loading=startLoad(b);loading.catch(()=>{});
+ const ov=el("div","ov"),bk=el("div","ob");bk.append(el("div","pg"),el("div","pl"),cover(b));ov.append(bk);document.body.append(ov);
+ requestAnimationFrame(()=>ov.classList.add("on"));
+ setTimeout(()=>bk.classList.add("open"),calm?0:650);
+ setTimeout(()=>openReader(b,loading,start),calm?150:1500);
+ setTimeout(()=>{ov.classList.remove("on");setTimeout(()=>ov.remove(),500)},calm?400:2100)}
+
+function toggleFav(b){fav.has(b.id)?fav.delete(b.id):fav.add(b.id);save();
+ if(cat==="__fav")renderShelves();else document.querySelectorAll('.fav[data-id="'+CSS.escape(b.id)+'"]').forEach(x=>{x.classList.toggle("on",fav.has(b.id));x.classList.remove("pop");void x.offsetWidth;x.classList.add("pop")});
+ renderChips();info()}
+function tilt(cv){if(!fine)return;const w=cv.parentNode;let raf=0,ev;
+ w.addEventListener("pointermove",e=>{ev=e;if(raf)return;raf=requestAnimationFrame(()=>{raf=0;const r=w.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width,y=(ev.clientY-r.top)/r.height;
+  cv.classList.add("hot");cv.style.transform=`rotateY(${(x-.5)*14}deg) rotateX(${(.5-y)*14}deg) scale(1.03)`;cv.firstChild.style.setProperty("--sx",x*100+"%")})});
+ w.addEventListener("pointerleave",()=>{cancelAnimationFrame(raf);raf=0;cv.classList.remove("hot");cv.style.transform="";cv.firstChild.style.setProperty("--sx","30%")})}
+function item(b){const w=el("div","card");
+ const k=el("button","bk");k.setAttribute("aria-label","Lihat detail "+b.t);
+ const tw=el("div","tw"),cv=el("div","cv");cv.append(cover(b));tw.append(cv);tilt(cv);k.append(tw);k.onclick=()=>pick(cv,()=>openDet(b));
+ const bd=el("div","cnt"),mb=el("div","mb");mb.append(el("i"));bd.append(el("span"),mb);badges[b.id]=bd;paint(b);
+ const tx=el("div","tx");tx.append(el("h3","",b.t),el("small","",b.a),bd);
+ const f=el("button","fav"+(fav.has(b.id)?" on":""));f.dataset.id=b.id;f.setAttribute("aria-label","Favorit");f.innerHTML=heart;f.onclick=e=>{e.stopPropagation();toggleFav(b)};
+ const m=el("div","meta");m.append(tx,f);m.onclick=e=>{if(!f.contains(e.target))pick(cv,()=>openDet(b))};
+ w.append(k,m);return w}
+function renderShelves(){
+ badges={};const box=$("#shelves");box.replaceChildren();const q=query.toLowerCase();let total=0;
+ cats().filter(c=>cat==="Semua"||cat==="__fav"||c===cat).forEach(c=>{
+  const L=BOOKS.filter(b=>b.c===c&&(cat!=="__fav"||fav.has(b.id))&&(b.t+" "+b.a+" "+b.c).toLowerCase().includes(q));if(!L.length)return;total+=L.length;
+  const s=el("section"),h=el("div","sh-head");h.append(el("h2","",c),el("span","",L.length+" buku"));
+  const g=el("div","grid");L.forEach(b=>g.append(item(b)));s.append(h,g);box.append(s)});
+ if(!total)box.append(el("p","none",cat==="__fav"?"Belum ada favorit. Ketuk ikon hati di bawah sampul buku.":"Tidak ada buku yang cocok. Coba kata kunci atau kategori lain."))}
+let ind=null;
+function moveInd(go){const ch=$("#chips"),a=ch.querySelector(".chip.on");if(!a||!ind)return;
+ ind.style.width=a.offsetWidth+"px";ind.style.transform="translateX("+a.offsetLeft+"px)";
+ if(go)ch.scrollTo({left:Math.max(0,a.offsetLeft-(ch.clientWidth-a.offsetWidth)/2),behavior:calm?"auto":"smooth"})}
+function swap(){renderShelves();const x=$("#shelves");if(calm)return;x.classList.remove("swap");void x.offsetWidth;x.classList.add("swap")}
+function renderChips(){const ch=$("#chips"),keep=ch.scrollLeft;ch.replaceChildren();ind=ind||el("i","ind");ch.append(ind);
+ const add=(v,label,k)=>{const e=el("button","chip"+(cat===v?" on":""),label);e.setAttribute("role","tab");e.append(el("b","",k));
+  e.onclick=()=>{if(cat===v)return;cat=v;ch.querySelectorAll(".chip").forEach(c=>c.classList.toggle("on",c===e));moveInd(true);swap()};ch.append(e)};
+ add("Semua","Semua",BOOKS.length);cats().forEach(c=>add(c,c,BOOKS.filter(b=>b.c===c).length));add("__fav","Favorit",fav.size);ch.scrollLeft=keep;
+ ind.style.transition="none";moveInd(false);void ind.offsetWidth;ind.style.transition=""}
+
+/* ===== Jendela detail buku ===== */
+function openDet(b){const d=$("#det");d.replaceChildren();
+ const wrap=el("div","dt"),L=el("div","dcv"),R=el("div","dr"),x=el("button","x","×");x.setAttribute("aria-label","Tutup");x.onclick=()=>d.close();
+ L.append(cover(b));
+ /* Rating */
+ const st=el("div","stars"),rtx=el("span","rt");
+ const draw=()=>{const v=rating(b);st.replaceChildren();
+  for(let i=1;i<=5;i++){const s=el("button","st","★");s.style.setProperty("--f",Math.max(0,Math.min(1,v-(i-1)))*100+"%");s.setAttribute("aria-label","Beri "+i+" bintang");
+   s.onclick=()=>{if(rate[b.id]===i)delete rate[b.id];else rate[b.id]=i;save();draw()};st.append(s)}
+  rtx.textContent=rate[b.id]?"Nilaimu "+rate[b.id]+" / 5":(b.r?"Rating "+fmt(b.r)+" / 5":"Ketuk bintang untuk menilai");st.append(rtx)};draw();
+ /* Identitas */
+ const idl=el("dl","idl");
+ [["Penulis",b.a],["Kategori",b.c],["Penerbit",b.pub],["Tahun terbit",b.yr],["Halaman",b.pg],b.lang&&["Bahasa",b.lang],b.isbn&&["ISBN",b.isbn],["File",b.f?b.f.split("/").pop():"Belum diunggah"]].filter(Boolean).forEach(([k,v])=>idl.append(el("dt","",k),el("dd","",v||"—")));
+ /* Progres */
+ const total=b.pg||0,tr=el("div","tr"),fl=el("div","fl"),pt=el("div","pt"),pa=el("span"),pb=el("b");tr.append(fl);pt.append(pa,pb);
+ const inp=el("input");inp.type="number";inp.min=0;if(total)inp.max=total;inp.inputMode="numeric";inp.value=prog[b.id]||"";inp.id="pgIn";
+ let rg=null;if(total){rg=el("input","rg");rg.type="range";rg.min=0;rg.max=total;rg.value=prog[b.id]||0;rg.setAttribute("aria-label","Geser untuk memilih halaman");
+  rg.oninput=()=>{inp.value=rg.value>0?rg.value:""};inp.oninput=()=>{rg.value=inp.value||0}}
+ const rdb=el("button","btn");
+ const upd=()=>{const p=prog[b.id]||0,pc=pct(b);fl.style.width=pc+"%";
+  pa.textContent=p?"Sampai halaman "+p+(total?" dari "+total:""):"Belum mulai dibaca";pb.textContent=total&&p?pc+"%":"";
+  rdb.textContent=p>1&&(!total||p<total)?"Lanjut baca, hal. "+p:"Baca sekarang";paint(b);info()};
+ const sv=el("button","btn g","Simpan");
+ sv.onclick=()=>{let p=parseInt(inp.value)||0;p=Math.max(0,total?Math.min(p,total):p);if(p)prog[b.id]=p;else delete prog[b.id];inp.value=p||"";if(rg)rg.value=p;save();upd();toast("Progres tersimpan")};
+ if(rg)rg.onchange=()=>sv.click();
+ const fin=el("button","btn g","Tandai selesai");fin.onclick=()=>{if(!total){toast("Jumlah halaman belum diketahui. Isi pg di daftar BOOKS atau buka bukunya dulu.");return}prog[b.id]=total;inp.value=total;rg.value=total;save();upd()};
+ const pc=el("div","pc"),lb=el("label","","Halaman terakhir");lb.htmlFor="pgIn";pc.append(lb,inp,sv);if(total)pc.append(fin);
+ rdb.onclick=()=>{d.close();read(b,null)};
+ const mk=(h,...c)=>{const s=el("div","sec");s.append(el("h4","",h),...c);return s};
+ const dsc=el("p","ds",b.d||"Belum ada deskripsi untuk buku ini. Tambahkan d:\"...\" pada daftar BOOKS.");
+ const da=el("div","da"),fv=el("button","btn g",fav.has(b.id)?"Tersimpan ♥":"Simpan ♡");fv.onclick=()=>{toggleFav(b);fv.textContent=fav.has(b.id)?"Tersimpan ♥":"Simpan ♡"};da.append(rdb,fv);
+ R.append(el("span","dcat",b.c),el("h2","",b.t),el("p","dau","oleh "+b.a),st,dsc,mk("Identitas buku",idl),mk("Progres bacaan",pt,tr,...(rg?[rg]:[]),pc),da);
+ wrap.append(x,L,R);d.append(wrap);upd();d.showModal();d.scrollTop=0}
+$("#det").addEventListener("click",e=>{if(e.target.id==="det")e.target.close()});
+
+/* ===== Hero (dibangun sekali, hanya teks yang diperbarui) ===== */
+const rail=$("#rail"),stage=$("#stage");
+const cfs=FEAT.map((b,i)=>{const e=el("div","cf");e.append(cover(b));e.onclick=()=>{if(moved)return;i===cur?pick(e,()=>openDet(b)):go(i)};rail.append(e);return e});
+let tgTxt,h2,haEl,hrEl,hdEl,favB,dotsEl;
+(function(){const e=$("#hi"),tg=el("span","tag");tg.append(el("i"));tgTxt=document.createTextNode("");tg.append(tgTxt);
+ h2=el("h2");haEl=el("div","ha");hrEl=el("div","hr");hdEl=el("p","hd");
+ const r=el("button","btn","Lihat detail");r.onclick=()=>pick(cfs[cur],()=>openDet(FEAT[cur]));
+ favB=el("button","btn g");favB.onclick=()=>toggleFav(FEAT[cur]);
+ const bx=el("div","hb");bx.append(r,favB);
+ dotsEl=el("div","dots");FEAT.forEach((x,i)=>{const d=el("button");d.setAttribute("aria-label","Buku "+(i+1));d.onclick=()=>{stop();go(i)};dotsEl.append(d)});
+ e.append(tg,h2,haEl,hrEl,hdEl,bx,dotsEl)})();
+function info(){const b=FEAT[cur],p=prog[b.id]||0;
+ tgTxt.nodeValue=p?"Lagi dibaca, hal. "+p:(n(b)?"Dibaca "+n(b)+" kali":"Pilihan koleksi");
+ if(h2.dataset.k!==b.id){h2.dataset.k=b.id;h2.replaceChildren(...b.t.split(" ").map((w,i)=>{const s=el("span","w",w);s.style.setProperty("--i",i);return s}));
+  haEl.textContent=b.a+", "+b.c;hdEl.textContent=b.d||"Ketuk lihat detail untuk melihat ringkasan, identitas buku, dan progres bacaanmu."}
+ const v=rating(b);hrEl.textContent=v?"★ "+fmt(v)+" / 5":"";
+ favB.textContent=fav.has(b.id)?"Tersimpan ♥":"Simpan ♡";
+ [...dotsEl.children].forEach((d,i)=>d.className=i===cur?"on":"")}
+function layout(){const W=cfs[0].offsetWidth,N=cfs.length;
+ cfs.forEach((e,i)=>{let d=(i-cur)%N;if(d>N/2)d-=N;if(d<-N/2)d+=N;const a=Math.abs(d),s=Math.sign(d);
+  e.style.transform=`translate3d(${d*W*.52}px,0,${-a*120}px) rotateY(${-s*38}deg) scale(${a?.9:1.08})`;
+  e.style.zIndex=9-a;e.style.opacity=a>1?0:1-a*.3;e.style.pointerEvents=a>1?"none":"auto"});info()}
+function go(i){cur=(i+FEAT.length)%FEAT.length;layout()}
+const stop=()=>{clearInterval(auto);auto=null};
+if(!calm)auto=setInterval(()=>{if(!document.hidden&&!RS.open&&!$("#det").open)go(cur+1)},5200);
+let x0=null;
+stage.addEventListener("pointerdown",e=>{x0=e.clientX;moved=false;stop()});
+stage.addEventListener("pointerup",e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>50){moved=true;go(cur+(dx<0?1:-1));setTimeout(()=>moved=false,50)}});
+stage.addEventListener("keydown",e=>{if(e.key==="ArrowRight"){stop();go(cur+1)}if(e.key==="ArrowLeft"){stop();go(cur-1)}});
+let rz;addEventListener("resize",()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame(layout)});
+
+/* ===== Progress bar halaman ===== */
+const bar=$("#bar");let tk=0;
+addEventListener("scroll",()=>{if(tk)return;tk=requestAnimationFrame(()=>{tk=0;const h=document.documentElement;bar.style.transform=`scaleX(${scrollY/Math.max(1,h.scrollHeight-innerHeight)})`})},{passive:true});
+
+/* ===== Pencarian & form tambah buku ===== */
+let sd;$("#q").oninput=e=>{clearTimeout(sd);sd=setTimeout(()=>{query=e.target.value;if(query&&scrollY<innerHeight*.5)$("#chips").scrollIntoView({behavior:"smooth"});renderShelves()},140)};
+$("#how").onclick=()=>$("#dlg").showModal();
+$("#cl").onclick=()=>$("#dlg").close();
+function mk(){const q=id=>$(id).value.trim().replace(/"/g,'\\"'),o=(k,id,num)=>{const v=q(id);return v?`,${k}:${num?(parseFloat(v.replace(",","."))||0):'"'+v+'"'}`:""};
+ $("#out").textContent=`{t:"${q("#aT")||"Judul"}",a:"${q("#aA")||"Penulis"}",c:"${q("#aC")||"Kategori"}",f:"${q("#aF")||"nama-buku.pdf"}"${o("d","#aD")}${o("pub","#aP")}${o("yr","#aY",1)}${o("pg","#aG",1)}${o("r","#aR",1)}${o("img","#aI")}},`}
+["#aT","#aA","#aC","#aF","#aD","#aP","#aY","#aG","#aR","#aI"].forEach(s=>$(s).oninput=mk);
+$("#cp").onclick=async()=>{try{await navigator.clipboard.writeText($("#out").textContent);toast("Baris disalin")}catch(e){toast("Salin manual dari kotak di atas")}};
+
+/* ===== Animasi klik: riak tombol & buku ===== */
+function pick(c,fn){const v=c&&c.querySelector(".cover");if(!v||calm)return fn();v.classList.remove("pick");void v.offsetWidth;v.classList.add("pick");setTimeout(fn,170)}
+document.addEventListener("pointerdown",e=>{if(calm)return;const t=e.target.closest(".btn,.chip,.ib,.fav,.fold-entry,.fcard,.frow");if(!t||t.disabled)return;
+ const r=t.getBoundingClientRect(),d=Math.hypot(Math.max(e.clientX-r.left,r.right-e.clientX),Math.max(e.clientY-r.top,r.bottom-e.clientY))*2,s=el("span","ripple");
+ s.style.cssText="width:"+d+"px;height:"+d+"px;left:"+(e.clientX-r.left-d/2)+"px;top:"+(e.clientY-r.top-d/2)+"px";t.append(s);setTimeout(()=>s.remove(),700)});
+document.fonts&&document.fonts.ready.then(()=>moveInd(false));
+addEventListener("resize",()=>moveInd(false));
+
+/* ===== Folder PDF (antarmuka baru) =====
+ Folder = kategori buku. Mau nama folder lain? Tambahkan dir:"Nama Folder" pada buku di daftar BOOKS. */
+const fv=$("#fv"),fL=$("#fList"),fq=$("#fq"),FV={open:false,dir:null};
+const dirOf=b=>b.dir||b.c;
+const FI=$(".fe-ic").innerHTML;
+function fFile(b,i){const r=el("button","frow"+(b.f?"":" off")),t=el("span","ft"),p=pct(b);
+ r.style.setProperty("--i",Math.min(i,12));r.innerHTML='<span class="pdf">PDF</span>';
+ t.append(el("b","",b.t),el("small","",b.a));r.append(t,el("em","fs",b.f?(p?p+"%":"Siap dibaca"):"Segera hadir"));
+ r.onclick=()=>read(b,r);return r}
+function fRender(back){
+ const q=fq.value.trim().toLowerCase(),dirs=[...new Set([...BOOKS.map(dirOf),...XF])];
+ const files=BOOKS.filter(b=>(!FV.dir||dirOf(b)===FV.dir)&&(b.t+" "+b.a+" "+dirOf(b)).toLowerCase().includes(q));
+ $("#fTitle").textContent=FV.dir||"Folder PDF";
+ $("#fSub").textContent=FV.dir?files.length+" file":dirs.length+" folder, "+BOOKS.length+" buku";
+ const grid=!FV.dir&&!q;fL.replaceChildren();fL.className=(grid?"fgrid ":"flist ")+(back?"f-back":"f-in");
+ if(grid){dirs.forEach((d,i)=>{const c=el("button","fcard"),w=el("span");c.style.setProperty("--i",Math.min(i,12));c.innerHTML=FI;
+  w.append(el("b","",d),el("small","",BOOKS.filter(b=>dirOf(b)===d).length+" buku"));c.append(w);
+  c.onclick=()=>setTimeout(()=>{FV.dir=d;fq.value="";fRender();fv.querySelector(".fbody").scrollTop=0},calm?0:110);fL.append(EDIT?fwrap(c,d):c)});if(EDIT)fL.append(addCard())}
+ else{files.forEach((b,i)=>fL.append(EDIT?frWrap(b,i):fFile(b,i)));if(!files.length)fL.append(el("p","none","Tidak ada file yang cocok. Coba kata kunci lain."))}}
+function openFolder(){if(FV.open)return;FV.open=true;FV.dir=null;fq.value="";fRender();fv.classList.add("on");
+ requestAnimationFrame(()=>requestAnimationFrame(()=>fv.classList.add("vis")));try{history.pushState({fv:1},"")}catch(e){}}
+function closeFolder(fromPop){if(!FV.open)return;FV.open=false;if(DIRTY){location.reload();return}fv.classList.remove("vis");setTimeout(()=>{if(!FV.open)fv.classList.remove("on")},calm?20:480);
+ if(!fromPop&&history.state&&history.state.fv){try{history.back()}catch(e){}}}
+function fBack(){if(FV.dir||fq.value){FV.dir=null;fq.value="";fRender(true)}else closeFolder()}
+$("#foldOpen").onclick=openFolder;$("#foldNav").onclick=openFolder;$("#fBack").onclick=fBack;fq.oninput=()=>fRender();
+$("#foldSub").textContent=cats().length+" folder, "+BOOKS.length+" buku";
+/* ===== Kelola folder (buka alamat situs dengan ?kelola) ===== */
+const ak=$("#ask"),dirs0=()=>[...new Set([...BOOKS.map(dirOf),...XF])],clean=b=>{const o={...b};delete o.id;delete o.h;delete o.i;return o};
+function commit(m){try{localStorage.setItem("draft",JSON.stringify({s:SIG,b:BOOKS.map(clean),x:XF}))}catch(e){}DIRTY=true;fRender();toast(m)}
+function ask(o){return new Promise(ok=>{$("#akT").textContent=o.title;$("#akP").textContent=o.text||"";const w=$("#akW");w.replaceChildren();let c;
+ if(o.options){c=el("select");o.options.forEach(([v,l])=>{const p=el("option","",l);p.value=v;c.append(p)});if(o.sel!=null)c.value=o.sel}
+ else if(o.input!=null){c=el("input");c.value=o.input;c.placeholder=o.ph||"";c.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("#akOk").click()}}}
+ if(c)w.append(c);$("#akOk").textContent=o.ok||"Simpan";$("#akOk").className="btn"+(o.danger?" dng":"");
+ const done=v=>{ak.close();ok(v)};$("#akOk").onclick=()=>done(c?c.value.trim():true);$("#akNo").onclick=()=>done(null);ak.oncancel=()=>ok(null);ak.showModal();c&&c.focus()})}
+async function addFolder(){const v=await ask({title:"Folder baru",input:"",ph:"mis. Fikih Muamalah"});if(!v)return;if(dirs0().includes(v))return toast("Nama folder sudah ada");XF.push(v);commit("Folder ditambahkan")}
+async function renFolder(d){const v=await ask({title:"Ubah nama folder",input:d});if(!v||v===d)return;if(dirs0().includes(v))return toast("Nama folder sudah ada");
+ BOOKS.forEach(b=>{if(b.c===d)b.c=v;if(b.dir===d)b.dir=v});const i=XF.indexOf(d);if(i>-1)XF[i]=v;commit("Nama folder diubah")}
+async function delFolder(d){const L=BOOKS.filter(b=>dirOf(b)===d),i=XF.indexOf(d);
+ if(!L.length){if(i>-1)XF.splice(i,1);return commit("Folder dihapus")}
+ const v=await ask({title:"Hapus folder "+d,text:L.length+" buku ada di folder ini. Mau diapakan?",options:[...dirs0().filter(x=>x!==d).map(x=>[x,"Pindahkan ke "+x]),["__del","Hapus bukunya dari daftar"]],ok:"Hapus folder",danger:1});if(!v)return;
+ if(v==="__del"){if(L.length>=BOOKS.length)return toast("Daftar buku tidak boleh kosong");L.forEach(b=>BOOKS.splice(BOOKS.indexOf(b),1))}else L.forEach(b=>{b.c=v;delete b.dir});
+ if(i>-1)XF.splice(i,1);commit("Folder dihapus")}
+async function moveBook(b){const v=await ask({title:"Pindahkan buku",text:b.t,options:[...dirs0().map(x=>[x,x]),["__new","+ Folder baru..."]],sel:dirOf(b),ok:"Pindahkan"});if(!v)return;
+ let t=v;if(v==="__new"){t=await ask({title:"Nama folder baru",input:""});if(!t)return}b.c=t;delete b.dir;commit("Buku dipindahkan")}
+async function delBook(b){if(BOOKS.length<2)return toast("Daftar buku tidak boleh kosong");
+ if(await ask({title:"Hapus buku?",text:b.t+" dihapus dari daftar. File PDF di GitHub tidak ikut terhapus.",ok:"Hapus",danger:1})){BOOKS.splice(BOOKS.indexOf(b),1);commit("Buku dihapus")}}
+const mini=(t,fn,c)=>{const x=el("button","mini"+(c?" "+c:""),t);x.onclick=e=>{e.stopPropagation();fn()};return x};
+function fwrap(c,d){const w=el("div","fwrap"),r=el("div","frw");r.append(mini("Ubah nama",()=>renFolder(d)),mini("Hapus",()=>delFolder(d),"d"));w.append(c,r);return w}
+function frWrap(b,i){const w=el("div","frw");w.append(fFile(b,i),mini("Pindah",()=>moveBook(b)),mini("Hapus",()=>delBook(b),"d"));return w}
+function addCard(){const c=el("button","fcard fadd");c.innerHTML="<b>+ Folder baru</b><small>Ketuk untuk menambah</small>";c.onclick=addFolder;return c}
+async function exportCode(){const t="const BOOKS=[\n"+BOOKS.map(b=>JSON.stringify(clean(b))).join(",\n")+"\n];\nconst FOLDER_EXTRA="+JSON.stringify(XF)+";";
+ try{await navigator.clipboard.writeText(t);toast("Kode disalin. Tempel ke index.html di GitHub")}catch(e){const w=window.open("","_blank");w&&w.document.write("<pre>"+t.replace(/</g,"&lt;")+"</pre>")}}
+async function resetDraft(){if(await ask({title:"Reset draf?",text:"Perubahan yang belum ditempel ke GitHub akan hilang.",ok:"Reset",danger:1})){try{localStorage.removeItem("draft")}catch(e){}location.reload()}}
+if(ADM){const ab=el("div","abar"),tg=el("button","mini","Kelola");tg.onclick=()=>{EDIT=!EDIT;tg.textContent=EDIT?"Selesai":"Kelola";fRender()};
+ ab.append(tg,mini("Salin kode",exportCode),mini("Reset draf",resetDraft));fL.parentNode.insertBefore(ab,fL)}
+addEventListener("popstate",()=>{if(FV.open&&!(history.state&&history.state.fv))closeFolder(true)});
+addEventListener("keydown",e=>{if(e.key==="Escape"&&FV.open&&!RS.open)fBack()});
+layout();renderChips();renderShelves();
+requestAnimationFrame(()=>requestAnimationFrame(()=>stage.classList.add("ready")));
+})();
+</script>
+</body>
+</html>
