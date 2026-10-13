@@ -10,24 +10,28 @@ const COL=["#FFD54A","#7ED957","#5BB5F0","#FF8FB1","#FF9F4A","#B48CF2","#E5483D"
 STK=["⭐","❤️","😊","🌙","📌","✅","❗","💡","🕌","📖","🤲","🌸","🔥","👍"],
 TOOLS=[["baca","📖 Baca"],["hl","🖍️ Stabilo"],["ul","➖ Garis bawah"],["pen","✏️ Pena"],["line","📏 Garis"],["note","📝 Catatan"],["stk","😊 Stiker"],["erase","🧽 Hapus"]],
 HINT={hl:"Blok teks untuk menandai",ul:"Blok teks untuk digarisbawahi",pen:"Gambar bebas di halaman",line:"Seret untuk membuat garis lurus",note:"Ketuk halaman untuk menambah catatan",stk:"Pilih stiker, lalu ketuk halaman",erase:"Ketuk tanda untuk menghapus"},
-PW=.0045,ZS=[1,1.5,2,3];
+PWS=[.0025,.0045,.009];
 
 /* ===== CSS ===== */
 document.head.append(Object.assign(el("style"),{textContent:`
 #rd2,#zp{position:fixed;inset:0;z-index:86;display:none;flex-direction:column;background:#EDE3D0;opacity:0;transition:opacity .35s}
 #zp{z-index:84;background:linear-gradient(180deg,#FDFBF6,#F1E8D6)}
 #rd2.on,#zp.on{display:flex}#rd2.vis,#zp.vis{opacity:1}
-#zS{margin:auto;flex:none}
+#zS{margin:auto;flex:none;will-change:transform}
 .zg{position:relative;background:#fff;box-shadow:0 30px 60px -30px rgba(60,40,10,.55),0 0 0 1px rgba(60,40,10,.08);isolation:isolate}
 .zg canvas{display:block}
 .zl{position:absolute;inset:0;overflow:hidden;line-height:1;z-index:1}
 .zl span,.zl br{color:transparent;position:absolute;white-space:pre;cursor:text;transform-origin:0 0}
 .zl ::selection{background:rgba(70,120,220,.3)}
 .zl span.hit{background:rgba(255,150,0,.42);border-radius:2px}
-.za,.zi,.zc{position:absolute;inset:0;pointer-events:none}
+.za,.zi,.zc,.zh{position:absolute;inset:0;pointer-events:none}
+.zh{z-index:0;width:100%;height:100%;mix-blend-mode:multiply;opacity:.5}
 .za{z-index:2;width:100%;height:100%}.zc{z-index:3}.zi{z-index:4}
-.za *{pointer-events:none}
-[data-t=erase] .za *{pointer-events:auto;cursor:pointer}
+.za *,.zh *{pointer-events:none}
+[data-t=erase] .za *,[data-t=erase] .zh *{pointer-events:auto;cursor:pointer}
+[data-t=erase] .zl{pointer-events:none}
+.zn,.zk2{touch-action:none;cursor:grab}
+.zw{flex:none;width:36px;height:30px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center}.zw.on{box-shadow:inset 0 0 0 2px var(--gold)}.zw i{display:block;width:18px;border-radius:9px;background:var(--ink)}
 [data-t=pen] .zc,[data-t=line] .zc,[data-t=note] .zc,[data-t=stk] .zc{pointer-events:auto;touch-action:none;cursor:crosshair}
 .zi>*{position:absolute;pointer-events:auto}
 [data-t=pen] .zi>*,[data-t=line] .zi>*{pointer-events:none}
@@ -93,13 +97,13 @@ async function build(b,doc,prog){const out=[];
 const hasText=x=>x&&x.join("").length>40;
 
 /* ===== Pembaca ===== */
-const S={open:0,doc:null,b:null,n:1,z:1,tok:0,task:null,t:"baca",c:COL[0],sk:STK[0],ann:{},W:null,rx:null,hits:[],hi:-1,lt:null};
+const S={pw:.0045,rz:1,pg:0,open:0,doc:null,b:null,n:1,z:1,tok:0,task:null,t:"baca",c:COL[0],sk:STK[0],ann:{},W:null,rx:null,hits:[],hi:-1,lt:null};
 const R=el("div");R.id="rd2";R.setAttribute("role","dialog");R.dataset.t="baca";
 const ic=d=>'<svg viewBox="0 0 24 24"><path d="'+d+'"/></svg>';
 R.innerHTML=`<div class="rbar"><button class="ib" id="zX" aria-label="Tutup">${ic("M15 5l-7 7 7 7")}</button><div class="rtt"><b id="zT"></b><small id="zA"></small></div>
 <button class="ib" id="zFind" aria-label="Cari di buku">${ic("M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4")}</button>
 <button class="ib" id="zList" aria-label="Catatanku">${ic("M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01")}</button>
-<button class="ib" id="zZo" aria-label="Perkecil">${ic("M5 12h14")}</button><button class="ib" id="zZi" aria-label="Perbesar">${ic("M5 12h14M12 5v14")}</button>
+<button class="ib" id="zZo" aria-label="Perkecil">${ic("M5 12h14")}</button><button class="ib" id="zPct" style="width:auto;padding:0 11px;border-radius:999px;font-size:12px;font-weight:700" aria-label="Atur ulang zoom">100%</button><button class="ib" id="zZi" aria-label="Perbesar">${ic("M5 12h14M12 5v14")}</button>
 <a class="ib" id="zOpen" target="_blank" rel="noopener" aria-label="Buka PDF asli">${ic("M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5")}</a></div>
 <div class="zq" id="zQ" hidden><label class="search"><input id="zQi" type="search" placeholder="Cari di buku ini (mis. sholat)" dir="auto"></label><small id="zQc"></small>
 <button class="ib" id="zQp" aria-label="Sebelumnya">${ic("M5 15l7-7 7 7")}</button><button class="ib" id="zQn" aria-label="Berikutnya">${ic("M5 9l7 7 7-7")}</button></div>
@@ -115,21 +119,26 @@ function dock(){const T=$("#zTools"),C=$("#zCtx");T.replaceChildren();C.replaceC
  TOOLS.forEach(([k,l])=>{const b=el("button","zt"+(S.t===k?" on":""),l);b.onclick=()=>setT(k);T.append(b)});
  const u=el("button","zt","↶ Urungkan");u.onclick=undo;T.append(u);
  if(S.t==="stk")STK.forEach(e=>{const b=el("button","zk"+(S.sk===e?" on":""),e);b.onclick=()=>{S.sk=e;dock()};C.append(b)});
- else if(["hl","ul","pen","line","note"].includes(S.t))COL.forEach(c=>{const b=el("button","zs"+(S.c===c?" on":""));b.style.background=c;b.setAttribute("aria-label","Warna");b.onclick=()=>{S.c=c;dock()};C.append(b)});
+ else if(["hl","ul","pen","line","note"].includes(S.t)){if(S.t==="pen"||S.t==="line")PWS.forEach((v,i)=>{const b=el("button","zw"+(S.pw===v?" on":"")),d=el("i");d.style.height=(2+i*3)+"px";b.append(d);b.setAttribute("aria-label","Ketebalan");b.onclick=()=>{S.pw=v;dock()};C.append(b)});COL.forEach(c=>{const b=el("button","zs"+(S.c===c?" on":""));b.style.background=c;b.setAttribute("aria-label","Warna");b.onclick=()=>{S.c=c;dock()};C.append(b)})}
  C.hidden=!C.children.length}
 function setT(k){S.t=k;R.dataset.t=k;dock();try{getSelection().removeAllRanges()}catch(e){}if(HINT[k])A.toast(HINT[k])}
 const saveA=()=>SV("ann:"+S.b.id,S.ann);
 function add(o){(S.ann[S.n]=S.ann[S.n]||[]).push(o);saveA();draw()}
 function undo(){const L=S.ann[S.n];if(!L||!L.length)return A.toast("Tidak ada tanda di halaman ini");L.pop();saveA();draw()}
 
-function draw(){const W=S.W;if(!W)return;const w=W.vp.width,h=W.vp.height,O=S.ann[S.n]||[];W.an.replaceChildren();W.it.replaceChildren();
+const pd=(p,w,h)=>{if(p.length<3)return"M"+p.map(q=>q[0]*w+" "+q[1]*h).join("L");let d="M"+p[0][0]*w+" "+p[0][1]*h;for(let i=1;i<p.length-1;i++)d+="Q"+p[i][0]*w+" "+p[i][1]*h+" "+(p[i][0]+p[i+1][0])/2*w+" "+(p[i][1]+p[i+1][1])/2*h;const l=p[p.length-1];return d+"L"+l[0]*w+" "+l[1]*h};
+function drag(e,o,n){if(S.t==="erase"||S.t==="pen"||S.t==="line")return;const r=S.W.it.getBoundingClientRect();let mv=0;try{n.setPointerCapture(e.pointerId)}catch(x){}
+ const m=ev=>{mv=1;o.x=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));o.y=Math.max(0,Math.min(1,(ev.clientY-r.top)/r.height));n.style.left=o.x*r.width+"px";n.style.top=o.y*r.height+"px"},
+ u=()=>{n.removeEventListener("pointermove",m);n.removeEventListener("pointerup",u);n.removeEventListener("pointercancel",u);if(mv){saveA();n._m=1}};
+ n.addEventListener("pointermove",m);n.addEventListener("pointerup",u);n.addEventListener("pointercancel",u)}
+function draw(){const W=S.W;if(!W)return;const w=W.vp.width,h=W.vp.height,O=S.ann[S.n]||[];W.hl.replaceChildren();W.an.replaceChildren();W.it.replaceChildren();
  O.forEach(o=>{const del=()=>{const i=O.indexOf(o);if(i>-1)O.splice(i,1);saveA();draw()},er=e=>{e.onclick=()=>{if(S.t==="erase")del()};return e};
-  if(o.k==="hl")o.r.forEach(r=>W.an.append(er(svg("rect",{x:r[0]*w,y:r[1]*h,width:r[2]*w,height:r[3]*h,rx:2,fill:o.c,style:"mix-blend-mode:multiply;opacity:.6"}))));
+  if(o.k==="hl")o.r.forEach(r=>W.hl.append(er(svg("rect",{x:r[0]*w-1,y:(r[1]+r[3]*.08)*h,width:r[2]*w+2,height:r[3]*h*.84,rx:3,fill:o.c}))));
   else if(o.k==="ul")o.r.forEach(r=>W.an.append(er(svg("rect",{x:r[0]*w,y:(r[1]+r[3])*h-1.5,width:r[2]*w,height:2.4,rx:1,fill:o.c}))));
-  else if(o.k==="pen"){const pts=o.p.map(p=>p[0]*w+","+p[1]*h).join(" "),a={points:pts,fill:"none","stroke-linecap":"round","stroke-linejoin":"round"};
-   W.an.append(er(svg("polyline",{...a,stroke:o.c,"stroke-width":o.w*w})),er(svg("polyline",{...a,stroke:"transparent","stroke-width":Math.max(16,o.w*w)})))}
-  else if(o.k==="note"){const n=el("button","zn","✎");n.style.left=o.x*w+"px";n.style.top=o.y*h+"px";n.style.background=o.c;n.title=o.t;n.onclick=()=>S.t==="erase"?del():noteEd(o);W.it.append(n)}
-  else if(o.k==="stk"){const s=el("span","zk2",o.e);s.style.cssText=`left:${o.x*w}px;top:${o.y*h}px;font-size:${w*.075}px`;s.onclick=()=>{if(S.t==="erase")del()};W.it.append(s)}})}
+  else if(o.k==="pen"){const a={d:pd(o.p,w,h),fill:"none","stroke-linecap":"round","stroke-linejoin":"round"};
+   W.an.append(er(svg("path",{...a,stroke:o.c,"stroke-width":o.w*w})),er(svg("path",{...a,stroke:"transparent","stroke-width":Math.max(16,o.w*w)})))}
+  else if(o.k==="note"){const n=el("button","zn","✎");n.style.left=o.x*w+"px";n.style.top=o.y*h+"px";n.style.background=o.c;n.title=o.t;n.onpointerdown=e=>drag(e,o,n);n.onclick=()=>{if(n._m){n._m=0;return}S.t==="erase"?del():noteEd(o)};W.it.append(n)}
+  else if(o.k==="stk"){const s=el("span","zk2",o.e);s.style.cssText=`left:${o.x*w}px;top:${o.y*h}px;font-size:${w*.075}px`;s.onpointerdown=e=>drag(e,o,s);s.onclick=()=>{if(s._m){s._m=0;return}if(S.t==="erase")del()};W.it.append(s)}})}
 
 function noteEd(o){const sh=$("#zSh"),ta=el("textarea"),row=el("div","act");sh.hidden=false;sh.replaceChildren();ta.value=o.t||"";ta.placeholder="Tulis catatan atau komentar…";ta.dir="auto";
  const ok=el("button","btn","Simpan"),dl=el("button","btn g","Hapus"),done=()=>{sh.hidden=true;saveA();draw()};
@@ -139,11 +148,11 @@ function noteEd(o){const sh=$("#zSh"),ta=el("textarea"),row=el("div","act");sh.h
 
 function bind(W){const cap=W.cap;let pts=null,pv=null;const P=e=>{const r=cap.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
  cap.onpointerdown=e=>{const[x,y]=P(e);
-  if(S.t==="pen"||S.t==="line"){pts=[[x,y]];pv=svg("polyline",{fill:"none",stroke:S.c,"stroke-width":PW*W.vp.width,"stroke-linecap":"round","stroke-linejoin":"round"});W.an.append(pv);cap.setPointerCapture(e.pointerId)}
+  if(S.t==="pen"||S.t==="line"){pts=[[x,y]];pv=svg("path",{fill:"none",stroke:S.c,"stroke-width":S.pw*W.vp.width,"stroke-linecap":"round","stroke-linejoin":"round"});W.an.append(pv);cap.setPointerCapture(e.pointerId)}
   else if(S.t==="note"){const o={k:"note",x,y,c:S.c,t:""};add(o);noteEd(o)}
   else if(S.t==="stk")add({k:"stk",x,y,e:S.sk})};
- cap.onpointermove=e=>{if(!pts)return;const p=P(e);if(S.t==="line")pts[1]=p;else pts.push(p);pv.setAttribute("points",pts.map(q=>q[0]*W.vp.width+","+q[1]*W.vp.height).join(" "))};
- cap.onpointerup=cap.onpointercancel=()=>{if(!pts)return;if(pts.length>1)add({k:"pen",c:S.c,w:PW,p:pts});else pv.remove();pts=null}}
+ cap.onpointermove=e=>{if(!pts)return;const p=P(e),l=pts[pts.length-1];if(S.t==="line")pts[1]=p;else if(Math.hypot(p[0]-l[0],p[1]-l[1])>.0015)pts.push(p);pv.setAttribute("d",pd(pts,W.vp.width,W.vp.height))};
+ cap.onpointerup=cap.onpointercancel=()=>{if(!pts)return;if(pts.length>1)add({k:"pen",c:S.c,w:S.pw,p:pts});else pv.remove();pts=null}}
 
 function applySel(){if(S.t!=="hl"&&S.t!=="ul")return;const sl=getSelection(),W=S.W;if(!sl||sl.isCollapsed||!W||!sl.rangeCount)return;
  const rg=sl.getRangeAt(0);if(!W.tl.contains(rg.commonAncestorContainer))return;const r0=W.w.getBoundingClientRect(),rs=[];
@@ -154,21 +163,35 @@ let sct;document.addEventListener("selectionchange",()=>{if(!S.open||(S.t!=="hl"
 
 function markHits(){const W=S.W;if(!W||!S.rx)return;W.tl.querySelectorAll("span").forEach(sp=>{const t=N(sp.textContent);if(S.rx.some(r=>{r.lastIndex=0;return r.test(t)}))sp.classList.add("hit")})}
 
-async function show(num,keep){const d=S.doc;if(!d)return;num=Math.max(1,Math.min(d.numPages,num));S.n=num;const tok=++S.tok;
+async function show(num,keep,foc){const d=S.doc;if(!d)return;num=Math.max(1,Math.min(d.numPages,num));S.n=num;const tok=++S.tok;
  $("#zGo").value=num;$("#zPv").disabled=num<=1;$("#zNx").disabled=num>=d.numPages;$("#zF").style.width=num/d.numPages*100+"%";A.setProg(S.b,num);$("#zSh").hidden=true;
  try{const pg=await d.getPage(num);if(tok!==S.tok)return;
   const v0=pg.getViewport({scale:1}),vp=pg.getViewport({scale:Math.max(.2,Math.min((V.clientWidth-24)/v0.width,(V.clientHeight-24)/v0.height))*S.z});
   let dpr=Math.min(devicePixelRatio||1,2);while(vp.width*vp.height*dpr*dpr>9e6&&dpr>1)dpr-=.25;
-  const w=el("div","zg"),c=el("canvas"),tl=el("div","zl"),an=svg("svg",{viewBox:`0 0 ${vp.width} ${vp.height}`,class:"za"}),it=el("div","zi"),cap=el("div","zc");
+  const w=el("div","zg"),c=el("canvas"),tl=el("div","zl"),an=svg("svg",{viewBox:`0 0 ${vp.width} ${vp.height}`,class:"za"}),hl=svg("svg",{viewBox:`0 0 ${vp.width} ${vp.height}`,class:"zh"}),it=el("div","zi"),cap=el("div","zc");
   w.style.width=vp.width+"px";w.style.height=vp.height+"px";c.width=Math.floor(vp.width*dpr);c.height=Math.floor(vp.height*dpr);c.style.width=vp.width+"px";c.style.height=vp.height+"px";
-  tl.style.setProperty("--scale-factor",vp.scale);w.append(c,tl,an,cap,it);
+  tl.style.setProperty("--scale-factor",vp.scale);w.append(c,hl,tl,an,cap,it);
   if(S.task){try{S.task.cancel()}catch(e){}}
   const task=pg.render({canvasContext:c.getContext("2d"),viewport:vp,transform:dpr!==1?[dpr,0,0,dpr,0,0]:null});S.task=task;await task.promise;if(tok!==S.tok)return;
-  stage.replaceChildren(w);if(!keep)V.scrollTo(0,0);const W=S.W={w,vp,tl,an,it,cap};bind(W);draw();
+  stage.style.transition="none";stage.style.transform="";S.rz=S.z;stage.replaceChildren(w);if(!keep)V.scrollTo(0,0);
+  if(foc){const r2=stage.getBoundingClientRect();V.scrollLeft+=r2.left+foc.fx*r2.width-foc.cx;V.scrollTop+=r2.top+foc.fy*r2.height-foc.cy}
+  $("#zPct").textContent=Math.round(S.z*100)+"%";const W=S.W={w,vp,tl,an,hl,it,cap};bind(W);draw();
   try{await pdfjsLib.renderTextLayer({textContentSource:pg.streamTextContent(),container:tl,viewport:vp,textDivs:[]}).promise;if(tok===S.tok)markHits()}catch(e){}
   if(num<d.numPages)d.getPage(num+1).catch(()=>{})}catch(e){}}
 const turn=d=>S.doc&&show(S.n+d);
-function zoom(d){S.z=ZS[Math.max(0,Math.min(ZS.length-1,ZS.indexOf(S.z)+d))];V.classList.toggle("z",S.z>1);show(S.n,true)}
+let zt,fo=null;
+function zoomTo(nz,cx,cy,anim){nz=Math.max(1,Math.min(5,nz));if(!S.doc||Math.abs(nz-S.z)<.005)return;
+ if(!fo){const r=stage.getBoundingClientRect();fo={fx:(cx-r.left)/r.width,fy:(cy-r.top)/r.height,cx,cy}}
+ S.z=nz;stage.style.transformOrigin=fo.fx*100+"% "+fo.fy*100+"%";stage.style.transition=anim?"transform .26s cubic-bezier(.22,.8,.2,1)":"none";stage.style.transform="scale("+nz/S.rz+")";
+ V.classList.toggle("z",nz>1);$("#zPct").textContent=Math.round(nz*100)+"%";clearTimeout(zt);zt=setTimeout(()=>{const f=fo;fo=null;show(S.n,true,f)},anim?280:170)}
+const vc=()=>{const r=V.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]};
+function zoom(d){const[x,y]=vc();zoomTo(S.z*(d>0?1.3:1/1.3),x,y,true)}
+$("#zPct").onclick=()=>{const[x,y]=vc();zoomTo(1,x,y,true)};
+V.addEventListener("wheel",e=>{if(!(e.ctrlKey||e.metaKey))return;e.preventDefault();zoomTo(S.z*Math.exp(-e.deltaY*.0025),e.clientX,e.clientY,false)},{passive:false});
+let d0=0,z0=1,lt=0;const dst=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+V.addEventListener("touchstart",e=>{if(e.touches.length===2){S.pg=1;d0=dst(e.touches);z0=S.z}},{passive:true});
+V.addEventListener("touchmove",e=>{if(e.touches.length===2&&d0){e.preventDefault();const t=e.touches;zoomTo(z0*dst(t)/d0,(t[0].clientX+t[1].clientX)/2,(t[0].clientY+t[1].clientY)/2,false)}},{passive:false});
+V.addEventListener("touchend",e=>{if(!e.touches.length){d0=0;setTimeout(()=>S.pg=0,120)}});
 
 async function open(b,start,q){
  if(!b.f)return A.toast("PDF buku ini belum diunggah ke folder buku");
@@ -220,7 +243,8 @@ addEventListener("keydown",e=>{if(!S.open)return;
  if(e.key==="ArrowRight"||e.key==="PageDown"){e.preventDefault();turn(1)}else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();turn(-1)}
  else if(e.key==="+"||e.key==="="){zoom(1)}else if(e.key==="-"){zoom(-1)}},true);
 let sx=null,sy=0;V.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY});V.addEventListener("pointercancel",()=>sx=null);
-V.addEventListener("pointerup",e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(S.t==="baca"&&S.z===1&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8)turn(dx<0?1:-1)});
+V.addEventListener("pointerup",e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(S.pg)return;if(S.t==="baca"&&S.z<1.02&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8)return turn(dx<0?1:-1);
+ if(e.pointerType==="touch"&&S.t==="baca"&&Math.abs(dx)<10&&Math.abs(dy)<10){const n=Date.now();if(n-lt<320){zoomTo(S.z>1.05?1:2.2,e.clientX,e.clientY,true);lt=0}else lt=n}});
 let rzt;addEventListener("resize",()=>{if(!S.open||!S.doc)return;clearTimeout(rzt);rzt=setTimeout(()=>show(S.n,true),180)});
 
 /* ===== Cari isi semua buku ===== */
