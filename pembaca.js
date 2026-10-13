@@ -33,6 +33,10 @@ document.head.append(Object.assign(el("style"),{textContent:`
 .zn,.zk2{touch-action:none;cursor:grab}
 .zw{flex:none;width:36px;height:30px;border-radius:10px;background:#fff;box-shadow:inset 0 0 0 1px var(--line);display:grid;place-items:center}.zw.on{box-shadow:inset 0 0 0 2px var(--gold)}.zw i{display:block;width:18px;border-radius:9px;background:var(--ink)}
 [data-t=pen] .zc,[data-t=line] .zc,[data-t=note] .zc,[data-t=stk] .zc{pointer-events:auto;touch-action:none;cursor:crosshair}
+[data-t=note] .zc,[data-t=stk] .zc{touch-action:manipulation}
+.zn.draft{outline:2px dashed rgba(60,40,10,.55);outline-offset:2px}
+.zsh.zed{max-height:none;bottom:var(--kb,0px);transition:bottom .15s}
+.zsh .act{display:flex;gap:8px;justify-content:flex-end}
 .zi>*{position:absolute;pointer-events:auto}
 [data-t=pen] .zi>*,[data-t=line] .zi>*{pointer-events:none}
 .zn{width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:9px 9px 9px 2px;font-size:14px;color:#33291F;box-shadow:0 4px 10px -3px rgba(60,40,10,.6),inset 0 0 0 1px rgba(0,0,0,.12)}
@@ -127,8 +131,8 @@ function add(o){(S.ann[S.n]=S.ann[S.n]||[]).push(o);saveA();draw()}
 function undo(){const L=S.ann[S.n];if(!L||!L.length)return A.toast("Tidak ada tanda di halaman ini");L.pop();saveA();draw()}
 
 const pd=(p,w,h)=>{if(p.length<3)return"M"+p.map(q=>q[0]*w+" "+q[1]*h).join("L");let d="M"+p[0][0]*w+" "+p[0][1]*h;for(let i=1;i<p.length-1;i++)d+="Q"+p[i][0]*w+" "+p[i][1]*h+" "+(p[i][0]+p[i+1][0])/2*w+" "+(p[i][1]+p[i+1][1])/2*h;const l=p[p.length-1];return d+"L"+l[0]*w+" "+l[1]*h};
-function drag(e,o,n){if(S.t==="erase"||S.t==="pen"||S.t==="line")return;const r=S.W.it.getBoundingClientRect();let mv=0;try{n.setPointerCapture(e.pointerId)}catch(x){}
- const m=ev=>{mv=1;o.x=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));o.y=Math.max(0,Math.min(1,(ev.clientY-r.top)/r.height));n.style.left=o.x*r.width+"px";n.style.top=o.y*r.height+"px"},
+function drag(e,o,n){if(S.t==="erase"||S.t==="pen"||S.t==="line")return;const r=S.W.it.getBoundingClientRect();let mv=0;const x0=e.clientX,y0=e.clientY;try{n.setPointerCapture(e.pointerId)}catch(x){}
+ const m=ev=>{if(!mv&&Math.hypot(ev.clientX-x0,ev.clientY-y0)<6)return;mv=1;o.x=Math.max(0,Math.min(1,(ev.clientX-r.left)/r.width));o.y=Math.max(0,Math.min(1,(ev.clientY-r.top)/r.height));n.style.left=o.x*r.width+"px";n.style.top=o.y*r.height+"px"},
  u=()=>{n.removeEventListener("pointermove",m);n.removeEventListener("pointerup",u);n.removeEventListener("pointercancel",u);if(mv){saveA();n._m=1}};
  n.addEventListener("pointermove",m);n.addEventListener("pointerup",u);n.addEventListener("pointercancel",u)}
 function draw(){const W=S.W;if(!W)return;const w=W.vp.width,h=W.vp.height,O=S.ann[S.n]||[];W.hl.replaceChildren();W.an.replaceChildren();W.it.replaceChildren();
@@ -137,22 +141,32 @@ function draw(){const W=S.W;if(!W)return;const w=W.vp.width,h=W.vp.height,O=S.an
   else if(o.k==="ul")o.r.forEach(r=>W.an.append(er(svg("rect",{x:r[0]*w,y:(r[1]+r[3])*h-1.5,width:r[2]*w,height:2.4,rx:1,fill:o.c}))));
   else if(o.k==="pen"){const a={d:pd(o.p,w,h),fill:"none","stroke-linecap":"round","stroke-linejoin":"round"};
    W.an.append(er(svg("path",{...a,stroke:o.c,"stroke-width":o.w*w})),er(svg("path",{...a,stroke:"transparent","stroke-width":Math.max(16,o.w*w)})))}
-  else if(o.k==="note"){const n=el("button","zn","✎");n.style.left=o.x*w+"px";n.style.top=o.y*h+"px";n.style.background=o.c;n.title=o.t;n.onpointerdown=e=>drag(e,o,n);n.onclick=()=>{if(n._m){n._m=0;return}S.t==="erase"?del():noteEd(o)};W.it.append(n)}
+  else if(o.k==="note"){const n=el("button","zn","✎");n.style.left=o.x*w+"px";n.style.top=o.y*h+"px";n.style.background=o.c;n.title=o.t;n.onpointerdown=e=>drag(e,o,n);n.onclick=()=>{if(n._m){n._m=0;return}S.t==="erase"?del():noteEd(o,false)};W.it.append(n)}
   else if(o.k==="stk"){const s=el("span","zk2",o.e);s.style.cssText=`left:${o.x*w}px;top:${o.y*h}px;font-size:${w*.075}px`;s.onpointerdown=e=>drag(e,o,s);s.onclick=()=>{if(s._m){s._m=0;return}if(S.t==="erase")del()};W.it.append(s)}})}
 
-function noteEd(o){const sh=$("#zSh"),ta=el("textarea"),row=el("div","act");sh.hidden=false;sh.replaceChildren();ta.value=o.t||"";ta.placeholder="Tulis catatan atau komentar…";ta.dir="auto";
- const ok=el("button","btn","Simpan"),dl=el("button","btn g","Hapus"),done=()=>{sh.hidden=true;saveA();draw()};
- ok.onclick=()=>{o.t=ta.value.trim();if(!o.t){const L=S.ann[S.n],i=L.indexOf(o);if(i>-1)L.splice(i,1)}done()};
- dl.onclick=()=>{const L=S.ann[S.n],i=L.indexOf(o);if(i>-1)L.splice(i,1);done()};
- row.append(dl,ok);sh.append(el("b","","Catatan · hal. "+S.n),ta,row);setTimeout(()=>ta.focus(),60)}
+function noteEd(o,isNew){const sh=$("#zSh"),ta=el("textarea"),row=el("div","act");sh.hidden=false;sh.className="zsh zed";sh.replaceChildren();ta.value=o.t||"";ta.placeholder="Tulis catatan atau komentar…";ta.dir="auto";S.ed=o;
+ const close=()=>{sh.hidden=true;sh.className="zsh";S.ed=null;draw()},
+ ok=el("button","btn","Simpan"),cn=el("button","btn g",isNew?"Batal":"Hapus");
+ ok.onclick=()=>{const v=ta.value.trim(),L=(S.ann[S.n]=S.ann[S.n]||[]),i=L.indexOf(o);
+  if(!v){if(i>-1)L.splice(i,1);saveA();close();return}
+  o.t=v;if(i<0)L.push(o);saveA();close();if(isNew&&S.t==="note")setT("baca")};
+ cn.onclick=()=>{if(!isNew){const L=S.ann[S.n],i=L.indexOf(o);if(i>-1)L.splice(i,1);saveA()}close()};
+ row.append(cn,ok);sh.append(el("b","","Catatan · hal. "+S.n),ta,row);
+ if(isNew){const W=S.W,n=el("button","zn draft","✎");n.style.left=o.x*W.vp.width+"px";n.style.top=o.y*W.vp.height+"px";n.style.background=o.c;n.style.pointerEvents="none";W.it.append(n)}
+ setTimeout(()=>{try{ta.focus({preventScroll:true})}catch(e){ta.focus()}},120)}
+function kbPos(){const sh=$("#zSh"),v=window.visualViewport;if(!v||sh.hidden)return;sh.style.setProperty("--kb",Math.max(0,innerHeight-v.height-v.offsetTop)+"px")}
+if(window.visualViewport){visualViewport.addEventListener("resize",kbPos);visualViewport.addEventListener("scroll",kbPos)}
 
-function bind(W){const cap=W.cap;let pts=null,pv=null;const P=e=>{const r=cap.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
+function bind(W){const cap=W.cap;let pts=null,pv=null,tap=null;const P=e=>{const r=cap.getBoundingClientRect();return[(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]};
  cap.onpointerdown=e=>{const[x,y]=P(e);
   if(S.t==="pen"||S.t==="line"){pts=[[x,y]];pv=svg("path",{fill:"none",stroke:S.c,"stroke-width":S.pw*W.vp.width,"stroke-linecap":"round","stroke-linejoin":"round"});W.an.append(pv);cap.setPointerCapture(e.pointerId)}
-  else if(S.t==="note"){const o={k:"note",x,y,c:S.c,t:""};add(o);noteEd(o)}
-  else if(S.t==="stk")add({k:"stk",x,y,e:S.sk})};
- cap.onpointermove=e=>{if(!pts)return;const p=P(e),l=pts[pts.length-1];if(S.t==="line")pts[1]=p;else if(Math.hypot(p[0]-l[0],p[1]-l[1])>.0015)pts.push(p);pv.setAttribute("d",pd(pts,W.vp.width,W.vp.height))};
- cap.onpointerup=cap.onpointercancel=()=>{if(!pts)return;if(pts.length>1)add({k:"pen",c:S.c,w:S.pw,p:pts});else pv.remove();pts=null}}
+  else if(S.t==="note"||S.t==="stk"){if(S.ed){tap=null;return}tap={x,y,cx:e.clientX,cy:e.clientY,t:Date.now(),id:e.pointerId}}};
+ cap.onpointermove=e=>{if(tap&&Math.hypot(e.clientX-tap.cx,e.clientY-tap.cy)>10)tap=null;
+  if(!pts)return;const p=P(e),l=pts[pts.length-1];if(S.t==="line")pts[1]=p;else if(Math.hypot(p[0]-l[0],p[1]-l[1])>.0015)pts.push(p);pv.setAttribute("d",pd(pts,W.vp.width,W.vp.height))};
+ cap.onpointerup=e=>{if(tap){const k=tap;tap=null;if(Date.now()-k.t<600&&e.pointerId===k.id&&!S.pg){
+   if(S.t==="note")noteEd({k:"note",x:k.x,y:k.y,c:S.c,t:""},true);else if(S.t==="stk")add({k:"stk",x:k.x,y:k.y,e:S.sk})}return}
+  if(!pts)return;if(pts.length>1)add({k:"pen",c:S.c,w:S.pw,p:pts});else pv.remove();pts=null};
+ cap.onpointercancel=()=>{tap=null;if(!pts)return;pv.remove();pts=null}}
 
 function applySel(){if(S.t!=="hl"&&S.t!=="ul")return;const sl=getSelection(),W=S.W;if(!sl||sl.isCollapsed||!W||!sl.rangeCount)return;
  const rg=sl.getRangeAt(0);if(!W.tl.contains(rg.commonAncestorContainer))return;const r0=W.w.getBoundingClientRect(),rs=[];
@@ -164,7 +178,7 @@ let sct;document.addEventListener("selectionchange",()=>{if(!S.open||(S.t!=="hl"
 function markHits(){const W=S.W;if(!W||!S.rx)return;W.tl.querySelectorAll("span").forEach(sp=>{const t=N(sp.textContent);if(S.rx.some(r=>{r.lastIndex=0;return r.test(t)}))sp.classList.add("hit")})}
 
 async function show(num,keep,foc){const d=S.doc;if(!d)return;num=Math.max(1,Math.min(d.numPages,num));S.n=num;const tok=++S.tok;
- $("#zGo").value=num;$("#zPv").disabled=num<=1;$("#zNx").disabled=num>=d.numPages;$("#zF").style.width=num/d.numPages*100+"%";A.setProg(S.b,num);$("#zSh").hidden=true;
+ $("#zGo").value=num;$("#zPv").disabled=num<=1;$("#zNx").disabled=num>=d.numPages;$("#zF").style.width=num/d.numPages*100+"%";A.setProg(S.b,num);if(!keep||S.n!==S.pn){if(!S.ed){$("#zSh").hidden=true}}S.pn=S.n;
  try{const pg=await d.getPage(num);if(tok!==S.tok)return;
   const v0=pg.getViewport({scale:1}),vp=pg.getViewport({scale:Math.max(.2,Math.min((V.clientWidth-24)/v0.width,(V.clientHeight-24)/v0.height))*S.z});
   let dpr=Math.min(devicePixelRatio||1,2);while(vp.width*vp.height*dpr*dpr>9e6&&dpr>1)dpr-=.25;
@@ -178,7 +192,7 @@ async function show(num,keep,foc){const d=S.doc;if(!d)return;num=Math.max(1,Math
   $("#zPct").textContent=Math.round(S.z*100)+"%";const W=S.W={w,vp,tl,an,hl,it,cap};bind(W);draw();
   try{await pdfjsLib.renderTextLayer({textContentSource:pg.streamTextContent(),container:tl,viewport:vp,textDivs:[]}).promise;if(tok===S.tok)markHits()}catch(e){}
   if(num<d.numPages)d.getPage(num+1).catch(()=>{})}catch(e){}}
-const turn=d=>S.doc&&show(S.n+d);
+const turn=d=>{if(!S.doc)return;S.ed=null;$("#zSh").className="zsh";show(S.n+d)};
 let zt,fo=null;
 function zoomTo(nz,cx,cy,anim){nz=Math.max(1,Math.min(5,nz));if(!S.doc||Math.abs(nz-S.z)<.005)return;
  if(!fo){const r=stage.getBoundingClientRect();fo={fx:(cx-r.left)/r.width,fy:(cy-r.top)/r.height,cx,cy}}
@@ -205,7 +219,7 @@ async function open(b,start,q){
   S.doc=doc;A.setPages(b,doc.numPages);$("#zGo").max=doc.numPages;$("#zOf").textContent="/ "+doc.numPages;$("#zM").classList.add("hide");
   if(q){$("#zQ").hidden=false;$("#zQi").value=q;await find(q,S.n)}else show(Math.min(S.n,doc.numPages))
  }catch(e){if(S.open&&S.b===b)$("#zMt").textContent="PDF tidak bisa dimuat. Pastikan file ada di folder buku dan situs dibuka lewat Vercel."}}
-function close(fromPop){if(!S.open)return;S.open=0;S.tok++;if(S.task){try{S.task.cancel()}catch(e){}}
+function close(fromPop){if(!S.open)return;S.open=0;S.ed=null;$("#zSh").hidden=true;$("#zSh").className="zsh";S.tok++;if(S.task){try{S.task.cancel()}catch(e){}}
  if(S.doc){try{S.doc.destroy()}catch(e){}S.doc=null}if(S.lt){try{S.lt.destroy()}catch(e){}}S.W=null;
  R.classList.remove("vis");document.documentElement.style.overflow=PS.open?"hidden":"";setTimeout(()=>{if(!S.open){R.classList.remove("on");stage.replaceChildren()}},450);
  if(!fromPop&&history.state&&history.state.zr){try{history.back()}catch(e){}}}
@@ -226,7 +240,7 @@ $("#zFind").onclick=()=>{const q=$("#zQ");q.hidden=!q.hidden;if(!q.hidden)$("#zQ
 
 /* ===== Daftar catatan & tanda ===== */
 $("#zList").onclick=()=>{const sh=$("#zSh"),P=Object.keys(S.ann).map(Number).filter(p=>(S.ann[p]||[]).length).sort((a,b)=>a-b);
- sh.hidden=false;sh.replaceChildren(el("b","","Catatan & tanda saya"));
+ S.ed=null;sh.className="zsh";sh.hidden=false;sh.replaceChildren(el("b","","Catatan & tanda saya"));
  if(!P.length)sh.append(el("p","none","Belum ada tanda. Pilih alat di bawah lalu mulai menandai."));
  P.forEach(p=>{const L=S.ann[p],nm={hl:"stabilo",ul:"garis bawah",pen:"coretan",note:"catatan",stk:"stiker"},cnt={};L.forEach(o=>cnt[o.k]=(cnt[o.k]||0)+1);
   const notes=L.filter(o=>o.k==="note"&&o.t).map(o=>"📝 "+o.t).join("\n"),b=el("button","zli","Halaman "+p);
@@ -245,7 +259,7 @@ addEventListener("keydown",e=>{if(!S.open)return;
 let sx=null,sy=0;V.addEventListener("pointerdown",e=>{sx=e.clientX;sy=e.clientY});V.addEventListener("pointercancel",()=>sx=null);
 V.addEventListener("pointerup",e=>{if(sx==null)return;const dx=e.clientX-sx,dy=e.clientY-sy;sx=null;if(S.pg)return;if(S.t==="baca"&&S.z<1.02&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8)return turn(dx<0?1:-1);
  if(e.pointerType==="touch"&&S.t==="baca"&&Math.abs(dx)<10&&Math.abs(dy)<10){const n=Date.now();if(n-lt<320){zoomTo(S.z>1.05?1:2.2,e.clientX,e.clientY,true);lt=0}else lt=n}});
-let rzt;addEventListener("resize",()=>{if(!S.open||!S.doc)return;clearTimeout(rzt);rzt=setTimeout(()=>show(S.n,true),180)});
+let rzt,rw=innerWidth;addEventListener("resize",()=>{if(!S.open||!S.doc)return;if(S.ed||/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||""))return;if(Math.abs(innerWidth-rw)<2)return;rw=innerWidth;clearTimeout(rzt);rzt=setTimeout(()=>show(S.n,true),180)});
 
 /* ===== Cari isi semua buku ===== */
 const P=el("div");P.id="zp";P.innerHTML=`<div class="rbar"><button class="ib" id="pX" aria-label="Kembali">${ic("M15 5l-7 7 7 7")}</button><label class="search" style="flex:1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input id="pQ" type="search" placeholder="Cari di isi semua buku, mis. sholat" dir="auto"></label></div>
