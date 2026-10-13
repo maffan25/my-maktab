@@ -70,6 +70,7 @@ input:lang(ar),textarea:lang(ar){font-weight:500}
 <label class="fl">Deskripsi singkat<textarea id="aD"></textarea></label>
 <div class="g2"><label class="fl">Penerbit<input id="aP"></label><label class="fl">Tahun terbit<input id="aY" inputmode="numeric"></label>
 <label class="fl">Jumlah halaman<input id="aG" inputmode="numeric"></label><label class="fl">Rating awal 1 sampai 5<input id="aR" inputmode="decimal"></label></div>
+<div class="g2"><label class="fl">Nama seri (isi jika berjilid)<input id="aSr" placeholder="mis. Minhajut Thalibin"></label><label class="fl">Jilid ke-<input id="aJ" inputmode="numeric" placeholder="1"></label></div>
 <label class="fl"><span><input type="checkbox" id="aS">Tampilkan sebagai pilihan utama di beranda</span></label>
 <div class="err" id="err" role="alert"></div>
 <div class="act"><button class="btn g" type="button" id="cx">Batal</button><button class="btn" type="submit">Simpan</button></div></form></dialog>
@@ -135,7 +136,7 @@ async function toJpg(file){var u=URL.createObjectURL(file),im=new Image();im.src
 function prev(blob){F("cvi").style.display=blob?"block":"none";if(blob)F("cvi").src=URL.createObjectURL(blob)}
 function openBook(i,folder){var b=i>=0?D.books[i]:{};cur={i:i,pdf:null,jpg:null,user:0};F("dT").textContent=i>=0?"Ubah buku":"Tambah buku";
  F("aT").value=b.t||"";F("aA").value=b.a||"";var fs=fold();if(!fs.length)fs.push("Umum");var s=F("aC");s.replaceChildren();fs.forEach(function(x){var o=el("option","",x);o.value=x;s.append(o)});s.value=b.c||folder||fs[0];
- F("aD").value=b.d||"";F("aP").value=b.pub||"";F("aY").value=b.yr||"";F("aG").value=b.pg||"";F("aR").value=b.r||"";F("aS").checked=!!b.star;F("aF").value="";F("aI").value="";
+ F("aD").value=b.d||"";F("aP").value=b.pub||"";F("aY").value=b.yr||"";F("aG").value=b.pg||"";F("aR").value=b.r||"";F("aSr").value=b.seri||"";F("aJ").value=b.jld||"";F("aS").checked=!!b.star;F("aF").value="";F("aI").value="";
  F("pf").textContent=b.f?"File saat ini: "+b.f+". Pilih file baru hanya bila ingin menggantinya.":"Belum ada PDF. Buku akan tampil sebagai Segera hadir.";
  var p=P[b.f||""];F("cvi").style.display="block";F("cvi").onerror=function(){F("cvi").style.display="none"};F("cvi").src=b.f?(p&&p.url?p.url:"buku/"+enc(jpgName(b.f))):"";if(!b.f)F("cvi").style.display="none";
  F("err").textContent="";F("dlg").showModal()}
@@ -146,7 +147,7 @@ F("aF").onchange=async function(e){var f=e.target.files[0];if(!f)return;cur.pdf=
 F("aI").onchange=async function(e){var f=e.target.files[0];if(!f)return;try{cur.jpg=await toJpg(f);cur.user=1;prev(cur.jpg)}catch(x){F("err").textContent="Foto sampul tidak bisa dibaca."}};
 F("form").onsubmit=function(e){e.preventDefault();var t=F("aT").value.trim();if(!t)return void(F("err").textContent="Judul wajib diisi.");
  var b=cur.i>=0?D.books[cur.i]:{f:""},num=function(id){return parseFloat(F(id).value.replace(",","."))||0},set=function(k,v){if(v)b[k]=v;else delete b[k]};
- b.t=t;b.a=F("aA").value.trim()||"Tanpa penulis";b.c=F("aC").value;set("d",F("aD").value.split("\n").map(function(x){return x.trim()}).join("\n").replace(/\n{3,}/g,"\n\n").trim());set("pub",F("aP").value.trim());set("yr",num("aY"));set("pg",num("aG"));set("r",Math.min(5,num("aR")));set("star",F("aS").checked?1:0);
+ b.t=t;b.a=F("aA").value.trim()||"Tanpa penulis";b.c=F("aC").value;set("d",F("aD").value.split("\n").map(function(x){return x.trim()}).join("\n").replace(/\n{3,}/g,"\n\n").trim());set("pub",F("aP").value.trim());set("yr",num("aY"));set("pg",num("aG"));set("r",Math.min(5,num("aR")));set("seri",F("aSr").value.trim());set("jld",num("aJ"));set("star",F("aS").checked?1:0);
  if(cur.pdf){if(!b.f)b.f=uniq(t,cur.pdf.name);var o=P[b.f]||{};o.pdf=cur.pdf;o.jpg=cur.jpg||o.jpg;P[b.f]=o}
  else if(cur.jpg&&b.f){P[b.f]=P[b.f]||{};P[b.f].jpg=cur.jpg}
  if(P[b.f]&&P[b.f].jpg)P[b.f].url=URL.createObjectURL(P[b.f].jpg);
