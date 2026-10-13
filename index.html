@@ -259,25 +259,23 @@ pre{margin-top:14px;padding:12px;background:rgba(110,86,50,.07);border-radius:14
 .stage{-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%),linear-gradient(180deg,#000 0,#000 88%,transparent 100%);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent 0,#000 8%,#000 92%,transparent 100%),linear-gradient(180deg,#000 0,#000 88%,transparent 100%);mask-composite:intersect}
 .stage .dim,.stage .beam,.stage .pool{position:absolute;pointer-events:none}
 .stage .dim{inset:0;z-index:8;opacity:0;background:radial-gradient(60% 70% at var(--bx,50%) 100%,rgba(255,255,255,.4),rgba(255,255,255,0) 100%);transition:opacity 1.1s ease}
-.stage .beam{left:var(--bx,50%);bottom:0;width:170%;height:118%;margin-left:-85%;z-index:9;opacity:0;transform-origin:50% 100%;transform:rotate(var(--tilt,0deg)) scaleX(.5);
- background:conic-gradient(from -21deg at 50% 100%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.62) 21deg,rgba(255,255,255,0) 42deg,transparent 360deg);
- -webkit-mask-image:linear-gradient(to top,#000 0,rgba(0,0,0,.88) 50%,transparent 97%);mask-image:linear-gradient(to top,#000 0,rgba(0,0,0,.88) 50%,transparent 97%);
+.stage .beam{left:var(--bx,50%);bottom:0;width:78%;height:92%;margin-left:-39%;z-index:9;opacity:0;transform-origin:50% 100%;transform:scale(.7,.75);
+ background:radial-gradient(ellipse 50% 100% at 50% 100%,rgba(255,255,255,.85) 0,rgba(255,255,255,.5) 34%,rgba(255,255,255,.16) 66%,rgba(255,255,255,0) 100%);
  transition:opacity 1.1s ease,transform 1.1s var(--e),left .7s var(--e)}
-.stage .pool{left:var(--bx,50%);bottom:-7%;width:66%;height:30%;margin-left:-33%;z-index:9;border-radius:50%;opacity:0;background:radial-gradient(closest-side,rgba(255,255,255,.9),rgba(255,255,255,.35) 58%,transparent);transition:opacity 1.1s ease,left .7s var(--e)}
+.stage .pool{left:var(--bx,50%);bottom:-6%;width:84%;height:30%;margin-left:-42%;z-index:9;border-radius:50%;opacity:0;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,.4) 60%,transparent);transition:opacity 1.1s ease,left .7s var(--e)}
 .stage.lit .dim{opacity:1;transition-duration:.3s}
-.stage.lit .beam{opacity:1;transform:rotate(var(--tilt,0deg)) scaleX(1);transition:opacity .25s ease-out,transform .55s var(--e),left .7s var(--e)}
+.stage.lit .beam{opacity:1;transform:scale(1);transition:opacity .25s ease-out,transform .55s var(--e),left .7s var(--e)}
 .stage.lit .pool{opacity:1;transition-duration:.25s,.7s}
 .stage .cf .cover{transition:filter 1s ease}
 .stage.lit .cf .cover{filter:brightness(1.07);transition-duration:.3s}
-.stage.burst .beam{transform:rotate(var(--tilt,0deg)) scaleX(1.4);filter:brightness(1.12)}
+.stage.burst .beam{transform:scale(1.18,1.08)}
 .stage.drag .beam,.stage.drag .pool{transition:opacity .2s,transform .3s}
 .spot{position:fixed;inset:0;z-index:75;pointer-events:none;overflow:hidden;animation:spotA 1.05s ease-out forwards}
-.spot .sb{position:absolute;left:calc(var(--x) - 100vw);width:200vw;top:calc(var(--y) - var(--h)*.62);bottom:0;transform-origin:50% 100%;
- background:conic-gradient(from -17deg at 50% 100%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.55) 17deg,rgba(255,255,255,0) 34deg,transparent 360deg);
- -webkit-mask-image:linear-gradient(to top,#000 0,rgba(0,0,0,.85) 55%,transparent 100%);mask-image:linear-gradient(to top,#000 0,rgba(0,0,0,.85) 55%,transparent 100%);animation:sbA 1s var(--e) both}
-.spot .sg{position:absolute;left:calc(var(--x) - var(--w)*.95);top:calc(var(--y) - var(--h)*.8);width:calc(var(--w)*1.9);height:calc(var(--h)*1.6);border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.55),rgba(255,255,255,.22) 60%,transparent)}
+.spot .sb{position:absolute;left:calc(var(--x) - var(--w)*1.15);width:calc(var(--w)*2.3);top:calc(var(--y) - var(--h)*.3);height:calc(var(--h)*1.1);transform-origin:50% 100%;
+ background:radial-gradient(ellipse 50% 100% at 50% 100%,rgba(255,255,255,.92) 0,rgba(255,255,255,.6) 36%,rgba(255,255,255,.2) 68%,rgba(255,255,255,0) 100%);animation:sbA 1s var(--e) both}
+.spot .sg{position:absolute;left:calc(var(--x) - var(--w)*.6);top:calc(var(--y) + var(--h)*.5 - 8px);width:calc(var(--w)*1.2);height:22px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.9),transparent);filter:blur(4px)}
 @keyframes spotA{0%{opacity:0}20%{opacity:1}100%{opacity:0}}
-@keyframes sbA{from{transform:scaleX(.3)}to{transform:scaleX(1.1)}}
+@keyframes sbA{from{transform:scale(.7,.55)}to{transform:scale(1.05,1)}}
 @media(prefers-reduced-motion:reduce){.stage .dim,.stage .beam,.stage .pool{display:none}}
 
 /* ===== Animasi buku saat diklik ===== */
@@ -710,8 +708,8 @@ function layout(){const W=cfs[0].offsetWidth,N=cfs.length;
 let litT,burstT;
 function light(burst,hold){if(calm)return;stage.classList.add("lit");clearTimeout(litT);if(!hold)litT=setTimeout(()=>stage.classList.remove("lit"),1500);
  if(burst){stage.classList.add("burst");clearTimeout(burstT);burstT=setTimeout(()=>stage.classList.remove("burst"),520)}}
-function aim(e){const r=stage.getBoundingClientRect(),x=e.clientX-r.left;stage.style.setProperty("--bx",x+"px");stage.style.setProperty("--tilt",Math.max(-14,Math.min(14,(x-r.width/2)/r.width*28))+"deg")}
-function rel(){stage.classList.remove("drag");stage.style.setProperty("--bx","50%");stage.style.setProperty("--tilt","0deg");if(stage.classList.contains("lit")){clearTimeout(litT);litT=setTimeout(()=>stage.classList.remove("lit"),1100)}}
+function aim(e){const r=stage.getBoundingClientRect(),x=e.clientX-r.left;stage.style.setProperty("--bx",(r.width/2+(x-r.width/2)*.22)+"px")}
+function rel(){stage.classList.remove("drag");stage.style.setProperty("--bx","50%");if(stage.classList.contains("lit")){clearTimeout(litT);litT=setTimeout(()=>stage.classList.remove("lit"),1100)}}
 function go(i){cur=(i+FEAT.length)%FEAT.length;layout();light()}
 const stop=()=>{clearInterval(auto);auto=null};
 if(!calm)auto=setInterval(()=>{if(!document.hidden&&!RS.open&&!$("#det").open)go(cur+1)},5200);
